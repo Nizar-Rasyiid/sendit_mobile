@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sendit/auth/register.dart';
 import 'package:sendit/home/homepage.dart';
+import 'package:sendit/main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -107,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const HomePage()));
+                              builder: (context) => const MainScreen()));
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -173,6 +175,10 @@ class _LoginPageState extends State<LoginPage> {
                     TextButton(
                       onPressed: () {
                         // Navigate to registration page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const RegisterPage())
+                        );
                       },
                       child: const Text('Daftar'),
                     ),
