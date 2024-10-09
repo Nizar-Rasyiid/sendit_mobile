@@ -7,26 +7,26 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[100],
-        appBar: _buildAppBar(),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildPromoSection(),
-                  const SizedBox(height: 24),
-                  _buildFeatureSection(),
-                  const SizedBox(height: 24),
-                  _buildCategorySection(),
-                ],
-              ),
+      backgroundColor: Colors.grey[100],
+      appBar: _buildAppBar(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildPromoSection(),
+                const SizedBox(height: 24),
+                _buildFeatureSection(),
+                const SizedBox(height: 24),
+                _buildCategorySection(),
+              ],
             ),
           ),
         ),
-        bottomNavigationBar: _buildBottomNavigationBar(context));
+      ),
+    );
   }
 
   AppBar _buildAppBar() {
@@ -228,42 +228,6 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBottomNavigationBar(BuildContext context) {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: Color(0xFF6C63FD),
-      unselectedItemColor: Colors.grey,
-      currentIndex: 0,
-      onTap: (index) {
-        if (index == 0) {
-          // Handle tap on index 0 (e.g., navigate to home page)
-        } else if (index == 1) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HistoryPage()));
-        }
-        // Add more cases for other indices if needed
-      },
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.history),
-          label: 'History',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.location_on),
-          label: 'Tracking',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
         ),
       ],
     );

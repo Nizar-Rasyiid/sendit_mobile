@@ -13,7 +13,7 @@ class HistoryPage extends StatelessWidget {
         title: Row(
           children: [
             Image.asset(
-              'assets/sendit_logo.png', // Make sure to add this asset
+              'assets/sendit.png', // Make sure to add this asset
               height: 24,
             ),
             SizedBox(width: 8),
@@ -71,17 +71,6 @@ class HistoryPage extends StatelessWidget {
               ],
             ),
           ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1, // History tab is selected
-        selectedItemColor: Color(0xFF6C63FF),
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );

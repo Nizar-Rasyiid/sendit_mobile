@@ -142,6 +142,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // Process data
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()));
                     }
                   },
                   style: ElevatedButton.styleFrom(
