@@ -1,8 +1,58 @@
 import 'package:flutter/material.dart';
 import 'orderInformationPage.dart';
 
-class OrderPage extends StatelessWidget {
+class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
+
+  @override
+  _OrderPageState createState() => _OrderPageState();
+}
+
+class _OrderPageState extends State<OrderPage> {
+  String selectedWeight = 'Kecil (Maks 5kg)'; // Default pilihan berat
+  double totalDistance = 10.0; // Contoh jarak pengiriman
+  double price = 0.0; // Harga berdasarkan jarak dan berat
+
+  // Controllers for address inputs
+  final TextEditingController senderAddressController = TextEditingController();
+  final TextEditingController receiverAddressController = TextEditingController();
+  
+  // Error messages
+  String? senderAddressError;
+  String? receiverAddressError;
+
+  @override
+  void initState() {
+    super.initState();
+    _calculatePrice(); // Hitung harga saat inisialisasi
+  }
+
+  void _calculatePrice() {
+    double pricePerKm = 3000; // Misalnya 5000 per kilometer
+    double weightFactor;
+
+    if (selectedWeight == 'Kecil (Maks 5kg)') {
+      weightFactor = 1.0;
+    } else if (selectedWeight == 'Sedang (Maks 20kg)') {
+      weightFactor = 1.5;
+    } else {
+      weightFactor = 2.0;
+    }
+
+    setState(() {
+      price = totalDistance * pricePerKm * weightFactor;
+    });
+  }
+
+  // Validate form inputs
+  bool _validateInputs() {
+    setState(() {
+      senderAddressError = senderAddressController.text.isEmpty ? 'Alamat pengirim harus diisi.' : null;
+      receiverAddressError = receiverAddressController.text.isEmpty ? 'Alamat penerima harus diisi.' : null;
+    });
+
+    return senderAddressError == null && receiverAddressError == null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +81,8 @@ class OrderPage extends StatelessWidget {
         ),
         actions: [
           CircleAvatar(
-            backgroundImage: AssetImage('assets/profile_picture.png'), // Pastikan aset ini ada
+            backgroundImage: AssetImage(
+                'assets/profile_picture.png'), // Pastikan aset ini ada
             radius: 16,
           ),
           const SizedBox(width: 16),
@@ -43,15 +94,17 @@ class OrderPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Kirim Barang!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              Center(
+                child: const Text(
+                  'Kirim Barang!',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Input untuk alamat pengirim
               const Text(
                 'Ambil paket di',
@@ -61,9 +114,9 @@ class OrderPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              _buildAddressInput('Masukkan alamat pengirim...', Icons.home),
+              _buildAddressInput(senderAddressController, senderAddressError, 'Masukkan alamat pengirim...', Icons.home),
               const SizedBox(height: 12),
-              
+
               // Input untuk alamat penerima
               const Text(
                 'Alamat Penerima',
@@ -73,24 +126,21 @@ class OrderPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              _buildAddressInput('Cari alamat penerima...', Icons.search),
-              const SizedBox(height: 12),
+              _buildAddressInput(receiverAddressController, receiverAddressError, 'Cari alamat penerima...', Icons.search),
 
-              ElevatedButton(
-                onPressed: () {
-                  // Implement functionality to select location via map
-                  // You could navigate to a map selection screen or show a dialog
-                  print("Select via Map clicked");
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6C63FF),
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                ),
-                child: const Text('Select via Map', style: TextStyle(fontSize: 16, color: Colors.white)),
+              const SizedBox(height: 12),
+              _buildDistanceInfo(), // Informasi jarak pengiriman
+
+              const SizedBox(height: 24),
+
+              // Pilihan untuk berat paket dengan tampilan box yang lebih rapi
+              const Text(
+                'Pilih Berat Paket',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
+              const SizedBox(height: 12),
+              _buildWeightSelectionBox(), // Box untuk pilihan berat
+
               const SizedBox(height: 24),
 
               // Bagian untuk alamat yang disimpan
@@ -118,14 +168,22 @@ class OrderPage extends StatelessWidget {
               const SizedBox(height: 12),
               _buildSavedAddress('Rumah Mama', 'Jl. Bunga Matahari No. 3'),
               const SizedBox(height: 24),
-              
+
+              // Tambahkan harga di bawah Saved Addresses
+              _buildPriceInfo(),
+
+              const SizedBox(height: 24),
+
               ElevatedButton(
                 onPressed: () {
-                  // Navigate to the recipient information page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const OrderInformationPage()),
-                  );
+                  if (_validateInputs()) {
+                    // Navigate to the recipient information page if validation is successful
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const OrderInformationPage()),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6C63FF),
@@ -134,7 +192,8 @@ class OrderPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(25),
                   ),
                 ),
-                child: const Text('Lanjutkan', style: TextStyle(fontSize: 16, color: Colors.white)),
+                child: const Text('Lanjutkan',
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
             ],
           ),
@@ -143,32 +202,165 @@ class OrderPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAddressInput(String hint, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.grey),
-          const SizedBox(width: 12),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: hint,
-                border: InputBorder.none,
-                hintStyle: const TextStyle(color: Colors.grey),
+  Widget _buildAddressInput(TextEditingController controller, String? errorText, String hint, IconData icon) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(25),
+            border: Border.all(color: errorText == null ? Colors.transparent : Colors.red),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: Colors.grey),
+              const SizedBox(width: 8),
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: hint,
+                    border: InputBorder.none,
+                    hintStyle: const TextStyle(color: Colors.grey),
+                  ),
+                  onSubmitted: (value) {
+                    // You can handle search functionality here
+                    print("Search for: $value");
+                  },
+                ),
               ),
-              onSubmitted: (value) {
-                // You can handle search functionality here
-                print("Search for: $value");
-              },
+            ],
+          ),
+        ),
+        if (errorText != null) // Display error message below the input box
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              errorText,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
             ),
           ),
-        ],
+      ],
+    );
+  }
+
+  // Informasi Jarak Pengiriman
+  Widget _buildDistanceInfo() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Total Jarak Pengiriman',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Text('$totalDistance km', style: const TextStyle(color: Colors.grey)),
+      ],
+    );
+  }
+
+  // Widget untuk box pilihan berat
+  Widget _buildWeightSelectionBox() {
+    return GestureDetector(
+      onTap: () {
+        _showWeightSelectionDialog();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(25),
+            border: Border.all(color: Colors.grey[300]!)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(selectedWeight, style: const TextStyle(fontSize: 16)),
+            const Icon(Icons.arrow_drop_down, color: Colors.grey),
+          ],
+        ),
       ),
+    );
+  }
+
+  // Dialog Pilihan Berat Paket
+  Future<void> _showWeightSelectionDialog() async {
+    String? selected = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        String tempWeight = selectedWeight; // Store temporary selection
+        return AlertDialog(
+          title: const Text('Pilih Berat Paket'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<String>(
+                title: const Text('Kecil (Maks 5kg)'),
+                value: 'Kecil (Maks 5kg)',
+                groupValue: tempWeight,
+                onChanged: (value) {
+                  setState(() {
+                    tempWeight = value!;
+                  });
+                  Navigator.pop(context, tempWeight);
+                },
+              ),
+              RadioListTile<String>(
+                title: const Text('Sedang (Maks 20kg)'),
+                value: 'Sedang (Maks 20kg)',
+                groupValue: tempWeight,
+                onChanged: (value) {
+                  setState(() {
+                    tempWeight = value!;
+                  });
+                  Navigator.pop(context, tempWeight);
+                },
+              ),
+              RadioListTile<String>(
+                title: const Text('Besar (Maks 100kg)'),
+                value: 'Besar (Maks 100kg)',
+                groupValue: tempWeight,
+                onChanged: (value) {
+                  setState(() {
+                    tempWeight = value!;
+                  });
+                  Navigator.pop(context, tempWeight);
+                },
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Batal'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (selected != null) {
+      setState(() {
+        selectedWeight = selected;
+        _calculatePrice(); // Hitung ulang harga setelah berat dipilih
+      });
+    }
+  }
+
+  // Widget untuk menampilkan informasi harga
+  Widget _buildPriceInfo() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Total Harga Pengiriman',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+        Text('Rp ${price.toStringAsFixed(0)}',
+            style: const TextStyle(fontSize: 18, color: Colors.green)),
+      ],
     );
   }
 

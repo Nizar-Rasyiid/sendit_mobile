@@ -15,6 +15,7 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // Set background color to white
       appBar: AppBar(
         backgroundColor: const Color(0xFF6C63FF),
         elevation: 0,
@@ -52,22 +53,20 @@ class _PaymentPageState extends State<PaymentPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTotalAmount(),
-              const SizedBox(height: 24),
-              _buildPaymentMethodSelection(),
-              const SizedBox(height: 24),
-              if (_selectedPaymentMethod == 'E-Wallet') _buildEWalletOptions(),
-              if (_selectedPaymentMethod == 'Bank') _buildBankOptions(),
-              const SizedBox(height: 24),
-              _buildConfirmationButtons(context), // Pass context here
-            ],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTotalAmount(),
+            const SizedBox(height: 24),
+            _buildPaymentMethodSelection(),
+            const SizedBox(height: 24),
+            if (_selectedPaymentMethod == 'E-Wallet') _buildEWalletOptions(),
+            if (_selectedPaymentMethod == 'Bank') _buildBankOptions(),
+            const Spacer(), // Pushes the buttons to the bottom
+            _buildConfirmationButtons(context), // Pass context here
+          ],
         ),
       ),
     );
