@@ -29,6 +29,8 @@ class OrderTrackingPage extends StatelessWidget {
           children: [
             _buildCourierInfo(),
             const SizedBox(height: 20),
+            _buildPickupAddress(),
+            const SizedBox(height: 20),
             _buildDeliveryAddress(),
             const SizedBox(height: 20),
             _buildTotalWeight(),
@@ -70,7 +72,6 @@ class OrderTrackingPage extends StatelessWidget {
                   onPressed: () {
                     // Handle chat action
                   },
-                  icon: const Icon(Icons.chat_bubble_outline, size: 16,color: Colors.white),
                   label: const Text('Chat', style: TextStyle(fontSize: 14, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6C63FF),
@@ -93,7 +94,23 @@ class OrderTrackingPage extends StatelessWidget {
       ],
     );
   }
-
+  Widget _buildPickupAddress() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Pickup Address',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Jl. Surya Sumantri BLOK A Nomor 17, Arab, Cicaheum',
+          style: TextStyle(color: Colors.grey),
+        ),
+      ],
+    );
+  }
+  
   Widget _buildDeliveryAddress() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
