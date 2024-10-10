@@ -14,7 +14,7 @@ class OrderPage extends StatelessWidget {
         title: Row(
           children: [
             Image.asset(
-              'assets/sendit.png', // Make sure to add this asset
+              'assets/sendit.png', // Pastikan aset ini ada
               height: 24,
               color: Colors.white,
             ),
@@ -31,7 +31,7 @@ class OrderPage extends StatelessWidget {
         ),
         actions: [
           CircleAvatar(
-            backgroundImage: AssetImage('assets/profile_picture.png'), // Add this asset
+            backgroundImage: AssetImage('assets/profile_picture.png'), // Pastikan aset ini ada
             radius: 16,
           ),
           const SizedBox(width: 16),
@@ -51,8 +51,31 @@ class OrderPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildAddressInput('Search delivery location...', Icons.search),
+              
+              // Input untuk alamat pengirim
+              const Text(
+                'Ambil paket di',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              _buildAddressInput('Masukkan alamat pengirim...', Icons.home),
               const SizedBox(height: 12),
+              
+              // Input untuk alamat penerima
+              const Text(
+                'Alamat Penerima',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              _buildAddressInput('Cari alamat penerima...', Icons.search),
+              const SizedBox(height: 12),
+
               ElevatedButton(
                 onPressed: () {
                   // Implement functionality to select location via map
@@ -69,6 +92,8 @@ class OrderPage extends StatelessWidget {
                 child: const Text('Select via Map', style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
               const SizedBox(height: 24),
+
+              // Bagian untuk alamat yang disimpan
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -93,6 +118,7 @@ class OrderPage extends StatelessWidget {
               const SizedBox(height: 12),
               _buildSavedAddress('Rumah Mama', 'Jl. Bunga Matahari No. 3'),
               const SizedBox(height: 24),
+              
               ElevatedButton(
                 onPressed: () {
                   // Navigate to the recipient information page

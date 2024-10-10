@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/payment/paymentPage.dart';// Pastikan untuk mengimpor PaymentPage
+import 'package:sendit/payment/paymentPage.dart'; // Pastikan untuk mengimpor PaymentPage
 
 class OrderInformationPage extends StatelessWidget {
   const OrderInformationPage({Key? key}) : super(key: key);
@@ -43,6 +43,23 @@ class OrderInformationPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Informasi Pengirim
+              const Text(
+                'Informasi Pengirim',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 24),
+              _buildInputField('Nama Pengirim'),
+              const SizedBox(height: 16),
+              _buildInputField('Nomor Pengirim'),
+              const SizedBox(height: 24),
+              _buildInputField('Informasi Tambahan', maxLines: 3), // Informasi tambahan untuk pengirim
+              const SizedBox(height: 24),
+
+              // Informasi Penerima
               const Text(
                 'Informasi Penerima',
                 style: TextStyle(
@@ -55,8 +72,9 @@ class OrderInformationPage extends StatelessWidget {
               const SizedBox(height: 16),
               _buildInputField('Nomor Penerima'),
               const SizedBox(height: 16),
-              _buildInputField('Informasi Tambahan', maxLines: 3),
+              _buildInputField('Informasi Tambahan', maxLines: 3), // Informasi tambahan hanya untuk penerima
               const SizedBox(height: 24),
+
               ElevatedButton(
                 onPressed: () {
                   // Navigasi ke halaman PaymentPage ketika tombol ditekan

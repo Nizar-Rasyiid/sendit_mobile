@@ -27,7 +27,7 @@ class OrderTrackingPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildUserInfo(),
+            _buildCourierInfo(),
             const SizedBox(height: 20),
             _buildDeliveryAddress(),
             const SizedBox(height: 20),
@@ -42,19 +42,53 @@ class OrderTrackingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildUserInfo() {
+  Widget _buildCourierInfo() {
     return Row(
       children: [
         CircleAvatar(
           radius: 30,
           backgroundImage: NetworkImage(
-            'https://via.placeholder.com/150', // Ganti dengan URL gambar profil
+            'assets/darwin.png', // Ganti dengan URL gambar profil kurir
           ),
         ),
         const SizedBox(width: 16),
-        const Text(
-          'Muhammad Irawan',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Muhammad Irawan',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const Text(
+              'D 1203 FE',
+              style: TextStyle(fontSize: 14, color: Colors.grey), // Keterangan kurir dan plat nomor
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    // Handle chat action
+                  },
+                  icon: const Icon(Icons.chat_bubble_outline, size: 16,color: Colors.white),
+                  label: const Text('Chat', style: TextStyle(fontSize: 14, color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF6C63FF),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                IconButton(
+                  icon: const Icon(Icons.phone, color: Color(0xFF6C63FF)),
+                  onPressed: () {
+                    // Handle call action
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
       ],
     );
