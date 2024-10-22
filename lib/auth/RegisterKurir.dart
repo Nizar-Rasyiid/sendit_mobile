@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:sendit/auth/LoginKurir.dart';
 import 'login.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class Registerkurir extends StatefulWidget {
+  const Registerkurir({super.key});
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _RegisterkurirState createState() => _RegisterkurirState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterkurirState extends State<Registerkurir> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
@@ -32,7 +33,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   child: Center(
                     child: Image.asset(
-                      'assets/kurir.png',
+                      'assets/ilustrasi_login.png',
                       fit: BoxFit.contain,
                       height: 150,
                     ),
@@ -40,7 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  'Daftar',
+                  'Daftar Sebagai Kurir',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -139,28 +140,39 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Process data
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()));
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    // iconColor: Colors.blue,
-                    backgroundColor: const Color.fromARGB(255, 66, 72, 255),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        // Process data
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()));
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      // iconColor: Colors.blue,
+                      backgroundColor: const Color.fromARGB(255, 66, 72, 255),
+
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: const Text(
-                    'Daftar',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginKurir()));
+                      },
+                      child: const Text(
+                        'Daftar',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    )),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -171,7 +183,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginPage()));
+                                builder: (context) => const LoginKurir()));
                       },
                       child: const Text('Masuk'),
                     ),

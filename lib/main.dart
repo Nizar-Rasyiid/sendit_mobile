@@ -3,7 +3,9 @@ import 'package:sendit/home/ProfilePage.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/home/historyPage.dart';
 import 'auth/login.dart';
+import 'home/WelcomeScreen.dart';
 import 'auth/register.dart';
+import 'auth/LoginKurir.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,10 +35,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const MainScreen(),
+      home: WelcomeScreen(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
+        '/loginKurir': (context) => LoginKurir(),
       },
     );
   }

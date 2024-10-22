@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:sendit/auth/RegisterKurir.dart';
 import 'package:sendit/auth/register.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/main.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginKurir extends StatefulWidget {
+  const LoginKurir({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginKurirState createState() => _LoginKurirState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginKurirState extends State<LoginKurir> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
@@ -33,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: Center(
                     child: Image.asset(
-                      'assets/ilustrasi_login.png',
+                      'assets/kurir.png',
                       fit: BoxFit.contain,
                       height: 150,
                     ),
@@ -41,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  'Masuk',
+                  'Login Sebagai Kurir',
                   style: TextStyle(
                       fontSize: 35,
                       fontWeight: FontWeight.bold,
@@ -50,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Nama Pengguna/Email',
+                    labelText: 'Nama Kurir/Email',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -58,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Mohon masukkan nama pengguna atau email';
+                      return 'Mohon masukkan nama Kurir atau email';
                     }
                     return null;
                   },
@@ -178,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const RegisterPage()));
+                                builder: (context) => const Registerkurir()));
                       },
                       child: const Text('Daftar'),
                     ),
