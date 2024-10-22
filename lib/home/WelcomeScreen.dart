@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sendit/auth/LoginKurir.dart';
 import 'package:wave/wave.dart';
 import 'package:wave/config.dart';
 import 'package:sendit/auth/login.dart';
@@ -84,28 +85,36 @@ class WelcomeScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: Color(0xFF5C3BFF),
-                                  padding: EdgeInsets.symmetric(vertical: 15),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                  onPressed: () {},
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: Color(0xFF5C3BFF),
+                                    padding: EdgeInsets.symmetric(vertical: 15),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    side: BorderSide(
+                                      color: Color(0xFF5C3BFF),
+                                      width: 1,
+                                    ),
+                                    elevation: 0,
                                   ),
-                                  side: BorderSide(
-                                    color: Color(0xFF5C3BFF),
-                                    width: 1,
-                                  ),
-                                  elevation: 0,
-                                ),
-                                child: Text(
-                                  'Kurir',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginKurir()));
+                                    },
+                                    child: Text(
+                                      'Kurir',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )),
                             ),
                             SizedBox(width: 15),
                             Expanded(
@@ -121,21 +130,29 @@ class WelcomeScreen extends StatelessWidget {
                                     elevation: 0,
                                   ),
                                   child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginPage()));
-                                    },
-                                    child: Text(
-                                      'Pengirim',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  )),
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginPage()));
+                                      },
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginPage()));
+                                        },
+                                        child: Text(
+                                          'Pengirim',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ))),
                             ),
                           ],
                         ),
