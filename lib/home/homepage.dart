@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sendit/home/historyPage.dart';
+import 'package:sendit/order/orderInformationPage.dart'; // Pastikan ini sesuai dengan path Anda
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,11 +17,11 @@ class HomePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildPromoSection(),
+                _buildPromoSection(context),
                 const SizedBox(height: 24),
-                _buildFeatureSection(),
+                _buildFeatureSection(context),
                 const SizedBox(height: 24),
-                _buildCategorySection(),
+                _buildCategorySection(context),
               ],
             ),
           ),
@@ -70,7 +71,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildPromoSection() {
+  Widget _buildPromoSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -124,7 +125,10 @@ class HomePage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Navigasi ke OrderInformationPage
+                        Navigator.pushNamed(context, '/OrderPage');
+                      },
                       style: ElevatedButton.styleFrom(
                         iconColor: Colors.white,
                         shadowColor: Color(0xFF6C63FD),
@@ -157,7 +161,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureSection() {
+  Widget _buildFeatureSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -177,7 +181,10 @@ class HomePage extends StatelessWidget {
                 icon: Icons.local_shipping,
                 label: 'Kirim Barang',
                 backgroundColor: Color(0xFF6C63FD),
-                onTap: () {},
+                onTap: () {
+                  // Navigasi ke OrderInformationPage
+                  Navigator.pushNamed(context, '/OrderPage');
+                },
               ),
             ),
             SizedBox(width: 16),
@@ -186,7 +193,9 @@ class HomePage extends StatelessWidget {
                 icon: Icons.help_outline,
                 label: 'FAQ',
                 backgroundColor: Color(0xFF4834DF),
-                onTap: () {},
+                onTap: () {
+                  // Aksi untuk FAQ
+                },
               ),
             ),
           ],
@@ -195,7 +204,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildCategorySection() {
+  Widget _buildCategorySection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -215,7 +224,9 @@ class HomePage extends StatelessWidget {
                 icon: Icons.widgets_outlined,
                 label: 'Ringan',
                 backgroundColor: Color(0xFF6C63FD),
-                onTap: () {},
+                onTap: () {
+                  // Aksi untuk kategori Ringan
+                },
               ),
             ),
             SizedBox(width: 16),
@@ -224,7 +235,9 @@ class HomePage extends StatelessWidget {
                 icon: Icons.inventory_2_outlined,
                 label: 'Berat',
                 backgroundColor: Color(0xFF4834DF),
-                onTap: () {},
+                onTap: () {
+                  // Aksi untuk kategori Berat
+                },
               ),
             ),
           ],

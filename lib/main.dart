@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sendit/home/ProfilePage.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/home/historyPage.dart';
+import 'package:sendit/order/orderInformationPage.dart';
+import 'package:sendit/order/orderPage.dart';
 import 'auth/login.dart';
 import 'home/WelcomeScreen.dart';
 import 'auth/register.dart';
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App',
+      title: 'SendIt!',
       theme: ThemeData(
         // primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
