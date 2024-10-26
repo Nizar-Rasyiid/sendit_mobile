@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sendit/FAQ/faqPage.dart';
 import 'package:sendit/home/ProfilePage.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/home/historyPage.dart';
@@ -41,7 +42,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
-        '/loginKurir': (context) => LoginKurir(),
+
+        '/main': (context) => const MainScreen(),
+        '/OrderPage': (context) => const OrderPage(),
+        '/FAQPage': (context) => FAQPage(),
+
       },
     );
   }
