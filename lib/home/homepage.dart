@@ -3,7 +3,7 @@ import 'package:sendit/home/historyPage.dart';
 import 'package:sendit/order/orderInformationPage.dart'; // Pastikan ini sesuai dengan path Anda
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +46,12 @@ class HomePage extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      actions: [
+      actions: const [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             children: [
-              const Text(
+              Text(
                 'User',
                 style: TextStyle(
                   fontSize: 16,
@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               CircleAvatar(
                 backgroundImage: AssetImage('assets/profile_image.png'),
                 radius: 20,
@@ -86,7 +86,7 @@ class HomePage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(30),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [Color(0xFF6C63FD), Color(0xFF4834DF)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -97,7 +97,7 @@ class HomePage extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.3),
                 spreadRadius: 2,
                 blurRadius: 5,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
           ),
@@ -131,12 +131,12 @@ class HomePage extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         iconColor: Colors.white,
-                        shadowColor: Color(0xFF6C63FD),
+                        shadowColor: const Color(0xFF6C63FD),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
                       ),
                       child: const Text(
                         'Kirim Sekarang!',
@@ -177,25 +177,82 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: FeatureCard(
-                icon: Icons.local_shipping,
-                label: 'Kirim Barang',
-                backgroundColor: Color(0xFF6C63FD),
-                onTap: () {
-                  // Navigasi ke OrderInformationPage
-                  Navigator.pushNamed(context, '/OrderPage');
-                },
+              child: SizedBox(
+                width: 150,
+                height: 100,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        const Color(0xFF4834DF), // Background color
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(16), // Rounded corners
+                    ),
+                  ),
+                  onPressed: () {
+                    // Navigasi ke OrderInformationPage
+                    Navigator.pushNamed(context, '/OrderPage');
+                  },
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.local_shipping, // Shipping icon
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Kirim Barang',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
-              child: FeatureCard(
-                icon: Icons.help_outline,
-                label: 'FAQ',
-                backgroundColor: Color(0xFF4834DF),
-                onTap: () {
-                  // Aksi untuk FAQ
-                },
+              child: SizedBox(
+                width: 150,
+                height: 100,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        const Color(0xFF4834DF), // Background color for FAQ
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(16), // Rounded corners
+                    ),
+                  ),
+                  onPressed: () {
+                    // Aksi untuk FAQ
+                    Navigator.pushNamed(context, '/FAQPage');
+                  },
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.help_outline, // FAQ icon
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'FAQ',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
@@ -220,24 +277,77 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: CategoryCard(
-                icon: Icons.widgets_outlined,
-                label: 'Ringan',
-                backgroundColor: Color(0xFF6C63FD),
-                onTap: () {
-                  // Aksi untuk kategori Ringan
-                },
+              child: SizedBox(
+                width: 150,
+                height: 100,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4834DF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      )),
+                  onPressed: () {
+                    // Navigasi ke kategori ringan
+                  },
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.indeterminate_check_box_outlined,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Ringan',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
-              child: CategoryCard(
-                icon: Icons.inventory_2_outlined,
-                label: 'Berat',
-                backgroundColor: Color(0xFF4834DF),
-                onTap: () {
-                  // Aksi untuk kategori Berat
-                },
+              child: SizedBox(
+                width: 150,
+                height: 100,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        const Color(0xFF4834DF), // Background color for FAQ
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(16), // Rounded corners
+                    ),
+                  ),
+                  onPressed: () {
+                    // Navigasi ke kategori berat
+                  },
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add_box_outlined, //
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Berat',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
@@ -254,19 +364,19 @@ class FeatureCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const FeatureCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.backgroundColor,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(16),
@@ -275,7 +385,7 @@ class FeatureCard extends StatelessWidget {
               color: backgroundColor.withOpacity(0.3),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -307,19 +417,19 @@ class CategoryCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const CategoryCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.backgroundColor,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(16),
@@ -328,7 +438,7 @@ class CategoryCard extends StatelessWidget {
               color: backgroundColor.withOpacity(0.3),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
