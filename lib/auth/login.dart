@@ -15,7 +15,10 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
-  bool _rememberMe = false;
+
+  bool _rememberMe = false; // Variabel untuk checkbox
+
+
 
 
   @override

@@ -126,6 +126,14 @@ class _LoginKurirState extends State<LoginKurir> {
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
+
+                    if (_formKey.currentState!.validate()) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MainScreen()));
+                    }
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 66, 72, 255),
