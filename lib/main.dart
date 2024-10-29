@@ -40,7 +40,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: WelcomeScreen(),
+
+      home: HomePage(),
+
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
