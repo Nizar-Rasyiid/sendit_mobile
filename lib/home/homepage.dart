@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/home/historyPage.dart';
-import 'package:sendit/order/orderInformationPage.dart'; // Pastikan ini sesuai dengan path Anda
+// Pastikan ini sesuai dengan path Anda
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -135,8 +134,10 @@ class HomePage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
+
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+
                       ),
                       child: const Text(
                         'Kirim Sekarang!',
@@ -177,82 +178,29 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: SizedBox(
-                width: 150,
-                height: 100,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFF4834DF), // Background color
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(16), // Rounded corners
-                    ),
-                  ),
-                  onPressed: () {
-                    // Navigasi ke OrderInformationPage
-                    Navigator.pushNamed(context, '/OrderPage');
-                  },
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.local_shipping, // Shipping icon
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Kirim Barang',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
+              child: FeatureCard(
+                icon: Icons.local_shipping,
+                label: 'Kirim Barang',
+                backgroundColor: const Color(0xFF6C63FD),
+                onTap: () {
+                  // Navigasi ke OrderInformationPage
+                  Navigator.pushNamed(context, '/OrderPage');
+                },
+
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: SizedBox(
-                width: 150,
-                height: 100,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFF4834DF), // Background color for FAQ
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(16), // Rounded corners
-                    ),
-                  ),
-                  onPressed: () {
-                    // Aksi untuk FAQ
-                    Navigator.pushNamed(context, '/FAQPage');
-                  },
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.help_outline, // FAQ icon
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'FAQ',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
+              child: FeatureCard(
+                icon: Icons.help_outline,
+                label: 'FAQ',
+                backgroundColor: const Color(0xFF4834DF),
+                onTap: () {
+                  // Aksi untuk FAQ
+                },
+
               ),
             ),
           ],
@@ -277,77 +225,28 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: SizedBox(
-                width: 150,
-                height: 100,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4834DF),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      )),
-                  onPressed: () {
-                    // Navigasi ke kategori ringan
-                  },
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.indeterminate_check_box_outlined,
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Ringan',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
+              child: CategoryCard(
+                icon: Icons.widgets_outlined,
+                label: 'Ringan',
+                backgroundColor: const Color(0xFF6C63FD),
+                onTap: () {
+                  // Aksi untuk kategori Ringan
+                },
+
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: SizedBox(
-                width: 150,
-                height: 100,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFF4834DF), // Background color for FAQ
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(16), // Rounded corners
-                    ),
-                  ),
-                  onPressed: () {
-                    // Navigasi ke kategori berat
-                  },
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.add_box_outlined, //
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Berat',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
+              child: CategoryCard(
+                icon: Icons.inventory_2_outlined,
+                label: 'Berat',
+                backgroundColor: const Color(0xFF4834DF),
+                onTap: () {
+                  // Aksi untuk kategori Berat
+                },
+
               ),
             ),
           ],

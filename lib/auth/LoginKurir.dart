@@ -143,21 +143,21 @@ class _LoginKurirState extends State<LoginKurir> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Row(
+                const Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: Divider(
                         thickness: 1,
                       ),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
                         "Atau",
                         style: TextStyle(color: Colors.grey),
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Divider(
                         thickness: 1,
                       ),
