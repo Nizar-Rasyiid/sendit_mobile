@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sendit/auth/forgotpw.dart'; // Pastikan nama ini sesuai dengan file yang ada
 import 'package:sendit/auth/register.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/main.dart';
@@ -13,6 +14,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+  bool _rememberMe = false; // Variabel untuk checkbox
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
                 Container(
                   height: 200,
                   decoration: BoxDecoration(
-                    // color: Colors.blue[100],
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
@@ -92,24 +93,48 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // Navigate to forgot password page
-                    },
-                    child: const Text('Lupa Sandi?'),
-                  ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _rememberMe,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _rememberMe = value ?? false;
+                            });
+                          },
+                        ),
+                        const Text('Ingat Sandi'),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordPage(),
+                          ),
+                        );
+                      },
+                      child: const Text('Lupa Sandi?'),
+                    ),
+                  ],
                 ),
+                
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Process login
+                      // Proses login
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MainScreen()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MainScreen(),
+                        ),
+                      );
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -174,11 +199,13 @@ class _LoginPageState extends State<LoginPage> {
                     const Text('Belum memiliki akun?'),
                     TextButton(
                       onPressed: () {
-                        // Navigate to registration page
+                        // Pindah ke halaman daftar
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const RegisterPage()));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterPage(),
+                          ),
+                        );
                       },
                       child: const Text('Daftar'),
                     ),

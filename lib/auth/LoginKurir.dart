@@ -3,6 +3,7 @@ import 'package:sendit/auth/RegisterKurir.dart';
 import 'package:sendit/auth/register.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/main.dart';
+import 'package:sendit/auth/forgotpw.dart';
 
 class LoginKurir extends StatefulWidget {
   const LoginKurir({super.key});
@@ -14,6 +15,7 @@ class LoginKurir extends StatefulWidget {
 class _LoginKurirState extends State<LoginKurir> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+  bool _rememberMe = false;
 
   @override
   Widget build(BuildContext context) {
@@ -93,20 +95,40 @@ class _LoginKurirState extends State<LoginKurir> {
                     return null;
                   },
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // Navigate to forgot password page
-                    },
-                    child: const Text('Lupa Sandi?'),
-                  ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _rememberMe,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _rememberMe = value ?? false;
+                            });
+                          },
+                        ),
+                        const Text('Ingat Sandi'),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordPage(),
+                          ),
+                        );
+                      },
+                      child: const Text('Lupa Sandi?'),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Process login
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -153,14 +175,14 @@ class _LoginKurirState extends State<LoginKurir> {
                 const SizedBox(height: 24),
                 OutlinedButton.icon(
                   onPressed: () {
-                    // Implement Apple ID login
+                    // Ini gimana implemennya??
                   },
                   icon: const Icon(Icons.apple),
                   label: const Text('Lanjutkan dengan Apple ID'),
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(
-                      color: Colors.indigo, // Warna border
-                      width: 2, // Ketebalan border
+                      color: Colors.indigo,
+                      width: 2,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -175,7 +197,6 @@ class _LoginKurirState extends State<LoginKurir> {
                     const Text('Belum memiliki akun?'),
                     TextButton(
                       onPressed: () {
-                        // Navigate to registration page
                         Navigator.push(
                             context,
                             MaterialPageRoute(
