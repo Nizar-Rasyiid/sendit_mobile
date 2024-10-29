@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/home/historyPage.dart';
-import 'package:sendit/order/orderInformationPage.dart'; // Pastikan ini sesuai dengan path Anda
+// Pastikan ini sesuai dengan path Anda
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +45,12 @@ class HomePage extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      actions: [
+      actions: const [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             children: [
-              const Text(
+              Text(
                 'User',
                 style: TextStyle(
                   fontSize: 16,
@@ -59,7 +58,7 @@ class HomePage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               CircleAvatar(
                 backgroundImage: AssetImage('assets/profile_image.png'),
                 radius: 20,
@@ -86,7 +85,7 @@ class HomePage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(30),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [Color(0xFF6C63FD), Color(0xFF4834DF)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -97,7 +96,7 @@ class HomePage extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.3),
                 spreadRadius: 2,
                 blurRadius: 5,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
           ),
@@ -131,12 +130,12 @@ class HomePage extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         iconColor: Colors.white,
-                        shadowColor: Color(0xFF6C63FD),
+                        shadowColor: const Color(0xFF6C63FD),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
                         padding:
-                            EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                            const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       ),
                       child: const Text(
                         'Kirim Sekarang!',
@@ -180,19 +179,19 @@ class HomePage extends StatelessWidget {
               child: FeatureCard(
                 icon: Icons.local_shipping,
                 label: 'Kirim Barang',
-                backgroundColor: Color(0xFF6C63FD),
+                backgroundColor: const Color(0xFF6C63FD),
                 onTap: () {
                   // Navigasi ke OrderInformationPage
                   Navigator.pushNamed(context, '/OrderPage');
                 },
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: FeatureCard(
                 icon: Icons.help_outline,
                 label: 'FAQ',
-                backgroundColor: Color(0xFF4834DF),
+                backgroundColor: const Color(0xFF4834DF),
                 onTap: () {
                   // Aksi untuk FAQ
                 },
@@ -223,18 +222,18 @@ class HomePage extends StatelessWidget {
               child: CategoryCard(
                 icon: Icons.widgets_outlined,
                 label: 'Ringan',
-                backgroundColor: Color(0xFF6C63FD),
+                backgroundColor: const Color(0xFF6C63FD),
                 onTap: () {
                   // Aksi untuk kategori Ringan
                 },
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: CategoryCard(
                 icon: Icons.inventory_2_outlined,
                 label: 'Berat',
-                backgroundColor: Color(0xFF4834DF),
+                backgroundColor: const Color(0xFF4834DF),
                 onTap: () {
                   // Aksi untuk kategori Berat
                 },
@@ -254,19 +253,19 @@ class FeatureCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const FeatureCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.backgroundColor,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(16),
@@ -275,7 +274,7 @@ class FeatureCard extends StatelessWidget {
               color: backgroundColor.withOpacity(0.3),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -307,19 +306,19 @@ class CategoryCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const CategoryCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.backgroundColor,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(16),
@@ -328,7 +327,7 @@ class CategoryCard extends StatelessWidget {
               color: backgroundColor.withOpacity(0.3),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),

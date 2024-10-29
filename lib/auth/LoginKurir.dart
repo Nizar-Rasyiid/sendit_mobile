@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sendit/auth/RegisterKurir.dart';
-import 'package:sendit/auth/register.dart';
-import 'package:sendit/home/homepage.dart';
 import 'package:sendit/main.dart';
 
 class LoginKurir extends StatefulWidget {
@@ -129,21 +127,21 @@ class _LoginKurirState extends State<LoginKurir> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Row(
+                const Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: Divider(
                         thickness: 1,
                       ),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
                         "Atau",
                         style: TextStyle(color: Colors.grey),
                       ),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Divider(
                         thickness: 1,
                       ),

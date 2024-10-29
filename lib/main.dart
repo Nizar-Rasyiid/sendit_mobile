@@ -8,6 +8,7 @@ import 'auth/login.dart';
 import 'home/WelcomeScreen.dart';
 import 'auth/register.dart';
 import 'auth/LoginKurir.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,18 +38,18 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: WelcomeScreen(),
+      home: const WelcomeScreen(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
-        '/loginKurir': (context) => LoginKurir(),
+        '/loginKurir': (context) => const LoginKurir(),
       },
     );
   }
 }
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   _MainScreenState createState() => _MainScreenState();

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '/order/order_tracking_page.dart'; // Pastikan untuk mengimpor halaman OrderTrackingPage
 
 class PaymentPage extends StatefulWidget {
-  const PaymentPage({Key? key}) : super(key: key);
+  const PaymentPage({super.key});
 
   @override
   _PaymentPageState createState() => _PaymentPageState();
@@ -73,9 +73,9 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildTotalAmount() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children: [
         Text(
           'Besar Tagihan',
           style: TextStyle(

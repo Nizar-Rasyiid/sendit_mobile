@@ -163,7 +163,7 @@ class _RegisterkurirState extends State<Registerkurir> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginKurir()));
+                                builder: (context) => const LoginKurir()));
                       },
                       child: const Text(
                         'Daftar',

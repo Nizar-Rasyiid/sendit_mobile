@@ -5,6 +5,8 @@ import 'package:wave/config.dart';
 import 'package:sendit/auth/login.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,17 +24,17 @@ class WelcomeScreen extends StatelessWidget {
               child: WaveWidget(
                 config: CustomConfig(
                   gradients: [
-                    [Color(0xFF4338CA), Color(0xFF6366F1)],
-                    [Color(0xFF6366F1), Color(0xFF818CF8)],
+                    [const Color(0xFF4338CA), const Color(0xFF6366F1)],
+                    [const Color(0xFF6366F1), const Color(0xFF818CF8)],
                   ],
                   durations: [35000, 19440],
                   heightPercentages: [0.35, 0.45],
-                  blur: MaskFilter.blur(BlurStyle.solid, 10),
+                  blur: const MaskFilter.blur(BlurStyle.solid, 10),
                   gradientBegin: Alignment.bottomLeft,
                   gradientEnd: Alignment.topRight,
                 ),
                 waveAmplitude: 30,
-                size: Size(double.infinity, 1000), // Ukuran tinggi gelombang
+                size: const Size(double.infinity, 1000), // Ukuran tinggi gelombang
               ),
             ),
           ),
@@ -40,7 +42,7 @@ class WelcomeScreen extends StatelessWidget {
           // Konten utama
           SafeArea(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
               child: Column(
                 children: [
                   // Logo dan welcome text section
@@ -58,10 +60,10 @@ class WelcomeScreen extends StatelessWidget {
                           ),
                           child: Image.asset('assets/dasLogo.png'),
                         ),
-                        SizedBox(height: 50),
-                        SizedBox(height: 150),
+                        const SizedBox(height: 50),
+                        const SizedBox(height: 150),
                         // Welcome text
-                        Text(
+                        const Text(
                           'Selamat Datang\ndi SendIt',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -70,8 +72,8 @@ class WelcomeScreen extends StatelessWidget {
                               height: 1.2,
                               color: Colors.white),
                         ),
-                        SizedBox(height: 10),
-                        Text(
+                        const SizedBox(height: 10),
+                        const Text(
                           'Pilih kategori pengguna',
                           style: TextStyle(
                             fontSize: 16,
@@ -80,7 +82,7 @@ class WelcomeScreen extends StatelessWidget {
                         ),
 
                         // Buttons
-                        SizedBox(height: 30),
+                        const SizedBox(height: 30),
                         Row(
                           children: [
                             Expanded(
@@ -88,12 +90,12 @@ class WelcomeScreen extends StatelessWidget {
                                   onPressed: () {},
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
-                                    backgroundColor: Color(0xFF5C3BFF),
-                                    padding: EdgeInsets.symmetric(vertical: 15),
+                                    backgroundColor: const Color(0xFF5C3BFF),
+                                    padding: const EdgeInsets.symmetric(vertical: 15),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    side: BorderSide(
+                                    side: const BorderSide(
                                       color: Color(0xFF5C3BFF),
                                       width: 1,
                                     ),
@@ -105,9 +107,9 @@ class WelcomeScreen extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  LoginKurir()));
+                                                  const LoginKurir()));
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       'Kurir',
                                       style: TextStyle(
                                         fontSize: 16,
@@ -116,14 +118,14 @@ class WelcomeScreen extends StatelessWidget {
                                     ),
                                   )),
                             ),
-                            SizedBox(width: 15),
+                            const SizedBox(width: 15),
                             Expanded(
                               child: ElevatedButton(
                                   onPressed: () {},
                                   style: ElevatedButton.styleFrom(
-                                    foregroundColor: Color(0xFF5C3BFF),
+                                    foregroundColor: const Color(0xFF5C3BFF),
                                     backgroundColor: Colors.white,
-                                    padding: EdgeInsets.symmetric(vertical: 15),
+                                    padding: const EdgeInsets.symmetric(vertical: 15),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -135,7 +137,7 @@ class WelcomeScreen extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    LoginPage()));
+                                                    const LoginPage()));
                                       },
                                       child: GestureDetector(
                                         onTap: () {
@@ -143,9 +145,9 @@ class WelcomeScreen extends StatelessWidget {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      LoginPage()));
+                                                      const LoginPage()));
                                         },
-                                        child: Text(
+                                        child: const Text(
                                           'Pengirim',
                                           style: TextStyle(
                                             fontSize: 16,
