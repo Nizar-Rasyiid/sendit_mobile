@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sendit/Kurir/KurirPages/HistoryKurir.dart';
 import 'BottomNavigation.dart';
+import 'package:sendit/Kurir/KurirPages/OrderList.dart';
 
 class HomeKurir extends StatefulWidget {
   const HomeKurir({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _HomeKurirState extends State<HomeKurir> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Image.asset(
-                'assets/sendit.png', // Make sure to add this asset
+                'assets/sendit.png',
                 height: 24,
                 color: Colors.white,
               ),
@@ -34,8 +35,7 @@ class _HomeKurirState extends State<HomeKurir> {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: Colors
-                        .transparent, // White background for the profile circle
+                    color: Colors.transparent,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -46,19 +46,16 @@ class _HomeKurirState extends State<HomeKurir> {
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: Colors.white // Purple color for the text
-                            ),
+                            color: Colors.white),
                       ),
                       const SizedBox(width: 4),
                       const CircleAvatar(
                         radius: 12,
-                        backgroundColor:
-                            Colors.white, // Purple background for the initial
+                        backgroundColor: Colors.white,
                         child: Text(
                           'M',
                           style: TextStyle(
-                            color: Color(
-                                0xFF6C63FF), // White color for the initial
+                            color: Color(0xFF6C63FF),
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
                           ),
@@ -71,22 +68,10 @@ class _HomeKurirState extends State<HomeKurir> {
             ],
           ),
         ),
-        actions: [
-          // TextButton(
-          //   onPressed: () {
-          //     // Handle profile editing
-          //   },
-          //   child: const Text(
-          //     'Profile',
-          //     style: TextStyle(color: Colors.white),
-          //   ),
-          // ),
-        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            // Main content
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -94,7 +79,6 @@ class _HomeKurirState extends State<HomeKurir> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Status Toggle
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -119,7 +103,6 @@ class _HomeKurirState extends State<HomeKurir> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Illustration Container
                       Container(
                         width: double.infinity,
                         height: 200,
@@ -138,7 +121,6 @@ class _HomeKurirState extends State<HomeKurir> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Action Cards
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -148,7 +130,12 @@ class _HomeKurirState extends State<HomeKurir> {
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => OrderListPage()),
+                              );
+                            },
                             child: Padding(
                               padding: const EdgeInsets.all(20),
                               child: Row(
@@ -162,8 +149,7 @@ class _HomeKurirState extends State<HomeKurir> {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         const Text(
                                           'Terima Pesanan!',
@@ -176,8 +162,7 @@ class _HomeKurirState extends State<HomeKurir> {
                                         Text(
                                           'Bersiap mengantar paket ke tempat tujuan',
                                           style: TextStyle(
-                                            color:
-                                                Colors.white.withOpacity(0.8),
+                                            color: Colors.white.withOpacity(0.8),
                                             fontSize: 12,
                                           ),
                                         ),
@@ -197,7 +182,6 @@ class _HomeKurirState extends State<HomeKurir> {
                       ),
                       const SizedBox(height: 12),
 
-                      // FAQ Card
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -221,8 +205,7 @@ class _HomeKurirState extends State<HomeKurir> {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         const Text(
                                           'FAQ!',
