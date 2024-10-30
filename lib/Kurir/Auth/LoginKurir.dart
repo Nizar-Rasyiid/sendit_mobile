@@ -131,11 +131,13 @@ class _LoginKurirState extends State<LoginKurir> {
 
                     if (_formKey.currentState!.validate()) {
                       // Process login
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const MainKurirNavigation()));
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MainKurirNavigation(),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     }
 
                   },
