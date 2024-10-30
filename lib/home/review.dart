@@ -175,7 +175,8 @@ class _ReviewPageState extends State<ReviewPage> {
                     const Text(
                       'Payment Details',
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
