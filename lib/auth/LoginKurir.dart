@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:sendit/auth/RegisterKurir.dart';
-import 'package:sendit/Kurir/HomeKurir.dart';
+
 
 import 'package:sendit/main.dart';
 import 'package:sendit/auth/forgotpw.dart';
@@ -129,13 +129,6 @@ class _LoginKurirState extends State<LoginKurir> {
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
-
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeKurir()));
-                    }
 
                   },
                   style: ElevatedButton.styleFrom(
