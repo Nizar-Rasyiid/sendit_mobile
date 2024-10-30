@@ -3,6 +3,7 @@ import 'package:sendit/Kurir/KurirPages/HistoryKurir.dart';
 import 'BottomNavigation.dart';
 import 'package:sendit/Kurir/KurirPages/OrderList.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:sendit/FAQ/faqPage.dart';
 
 class HomeKurir extends StatefulWidget {
   const HomeKurir({Key? key}) : super(key: key);
@@ -177,7 +178,10 @@ class _HomeKurirState extends State<HomeKurir> {
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () {
-                              //nanti ini ke halaman FAQ
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => FAQPage()),
+                              );
                             },
                             borderRadius: BorderRadius.circular(16),
                             child: Padding(
