@@ -31,14 +31,6 @@ class _PaymentPageState extends State<PaymentPage> {
               color: Colors.white,
             ),
             const SizedBox(width: 8),
-            const Text(
-              'Sendit!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
           ],
         ),
         actions: [
