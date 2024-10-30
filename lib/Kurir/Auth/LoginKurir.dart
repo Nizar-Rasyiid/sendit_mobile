@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/auth/RegisterKurir.dart';
+import 'package:sendit/Kurir/Auth/RegisterKurir.dart';
+import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
+import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
 import 'package:sendit/main.dart';
 import 'package:sendit/auth/forgotpw.dart';
 
@@ -126,6 +128,16 @@ class _LoginKurirState extends State<LoginKurir> {
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
+
+                    if (_formKey.currentState!.validate()) {
+                      // Process login
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const MainKurirNavigation()));
+                    }
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 66, 72, 255),

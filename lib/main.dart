@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/FAQ/faqPage.dart';
+
+import 'package:sendit/Kurir/KurirPages/HistoryKurir.dart';
+import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
+import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
+
 import 'package:sendit/home/ProfilePage.dart';
+import 'package:sendit/home/WelcomeScreen.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/home/historyPage.dart';
-import 'package:sendit/order/orderInformationPage.dart';
-import 'package:sendit/order/orderPage.dart';
 import 'auth/login.dart';
-import 'home/WelcomeScreen.dart';
 import 'auth/register.dart';
-import 'auth/LoginKurir.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'Kurir/Auth/LoginKurir.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const WelcomeScreen(),
+      home: WelcomeScreen(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
