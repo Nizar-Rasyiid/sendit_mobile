@@ -42,9 +42,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 const Text(
                   'Daftar',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 35,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -159,7 +159,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   child: const Text(
                     'Daftar',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 16),
