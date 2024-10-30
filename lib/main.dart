@@ -8,11 +8,18 @@ import 'package:sendit/home/ProfilePage.dart';
 import 'package:sendit/home/WelcomeScreen.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/home/historyPage.dart';
+
+import 'package:sendit/local_notifications.dart';
+import 'package:sendit/order/orderInformationPage.dart';
+import 'package:sendit/order/orderPage.dart';
+
 import 'auth/login.dart';
 import 'auth/register.dart';
 import 'Kurir/Auth/LoginKurir.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalNotifications.init();
   runApp(const MyApp());
 }
 

@@ -62,7 +62,7 @@ class FAQPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF6200EE),
+        backgroundColor: const Color(0xFF4834DF),
         title: Text(
           'FAQ',
           style: TextStyle(
