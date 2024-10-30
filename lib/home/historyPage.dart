@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sendit/home/review.dart';
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key});
@@ -13,7 +14,7 @@ class HistoryPage extends StatelessWidget {
         title: Row(
           children: [
             Image.asset(
-              'assets/sendit.png', // Make sure to add this asset
+              'assets/sendit.png',
               height: 24,
             ),
             const SizedBox(width: 8),
@@ -31,8 +32,7 @@ class HistoryPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
-              backgroundImage:
-                  AssetImage('assets/profile_image.png'), // Add this asset
+              backgroundImage: AssetImage('assets/profile_image.png'),
               radius: 16,
             ),
           ),
@@ -56,16 +56,36 @@ class HistoryPage extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                _buildHistoryItem(
-                  'J. Internasional I, Tanean Sumber...',
-                  'Rp15.000',
-                  Icons.local_shipping,
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ReviewPage(),
+                      ),
+                    );
+                  },
+                  child: _buildHistoryItem(
+                    'J. Internasional I, Tanean Sumber...',
+                    'Rp15.000',
+                    Icons.local_shipping,
+                  ),
                 ),
                 const SizedBox(height: 12),
-                _buildHistoryItem(
-                  'Jl. Untung Suropati No. 32',
-                  'Rp10.100',
-                  Icons.local_shipping,
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ReviewPage(),
+                      ),
+                    );
+                  },
+                  child: _buildHistoryItem(
+                    'Jl. Untung Suropati No. 32',
+                    'Rp10.100',
+                    Icons.local_shipping,
+                  ),
                 ),
                 // Add more history items as needed
               ],
@@ -117,6 +137,11 @@ class HistoryPage extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          const Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.white,
+            size: 16,
           ),
         ],
       ),
