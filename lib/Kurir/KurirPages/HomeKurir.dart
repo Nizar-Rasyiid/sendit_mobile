@@ -102,7 +102,6 @@ class _HomeKurirState extends State<HomeKurir> {
                         ],
                       ),
                       const SizedBox(height: 20),
-
                       Container(
                         width: double.infinity,
                         height: 200,
@@ -120,7 +119,6 @@ class _HomeKurirState extends State<HomeKurir> {
                         ),
                       ),
                       const SizedBox(height: 20),
-
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -133,7 +131,8 @@ class _HomeKurirState extends State<HomeKurir> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => OrderListPage()),
+                                MaterialPageRoute(
+                                    builder: (context) => OrderListPage()),
                               );
                             },
                             child: Padding(
@@ -146,10 +145,11 @@ class _HomeKurirState extends State<HomeKurir> {
                                     height: 24,
                                     color: Colors.white,
                                   ),
-                                  const SizedBox(width: 12),
+                                  const SizedBox(width: 12, height: 50),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         const Text(
                                           'Terima Pesanan!',
@@ -162,7 +162,8 @@ class _HomeKurirState extends State<HomeKurir> {
                                         Text(
                                           'Bersiap mengantar paket ke tempat tujuan',
                                           style: TextStyle(
-                                            color: Colors.white.withOpacity(0.8),
+                                            color:
+                                                Colors.white.withOpacity(0.8),
                                             fontSize: 12,
                                           ),
                                         ),
@@ -181,7 +182,6 @@ class _HomeKurirState extends State<HomeKurir> {
                         ),
                       ),
                       const SizedBox(height: 12),
-
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -202,10 +202,11 @@ class _HomeKurirState extends State<HomeKurir> {
                                     color: Color(0xFF6C63FF),
                                     size: 24,
                                   ),
-                                  const SizedBox(width: 12),
+                                  const SizedBox(width: 12, height: 50),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         const Text(
                                           'FAQ!',
