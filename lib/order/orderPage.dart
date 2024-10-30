@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'orderInformationPage.dart';
 
 class OrderPage extends StatefulWidget {
-  const OrderPage({Key? key}) : super(key: key);
+  const OrderPage({super.key});
 
   @override
   _OrderPageState createState() => _OrderPageState();
@@ -79,13 +79,13 @@ class _OrderPageState extends State<OrderPage> {
             ),
           ],
         ),
-        actions: [
+        actions: const [
           CircleAvatar(
             backgroundImage: AssetImage(
                 'assets/profile_picture.png'), // Pastikan aset ini ada
             radius: 16,
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
         ],
       ),
       body: SingleChildScrollView(
@@ -94,8 +94,8 @@ class _OrderPageState extends State<OrderPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: const Text(
+              const Center(
+                child: Text(
                   'Kirim Barang!',
                   style: TextStyle(
                     fontSize: 24,
