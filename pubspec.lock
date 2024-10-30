@@ -317,7 +317,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
-   xdg_directories:
+  xdg_directories:
     dependency: transitive
     description:
       name: xdg_directories

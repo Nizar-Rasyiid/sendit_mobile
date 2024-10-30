@@ -350,7 +350,7 @@ class _OrderPageState extends State<OrderPage> {
 
     setState(() {
       selectedWeight = selected!;
-      _calculatePrice(); // Hitung ulang harga setelah berat dipilih
+      _calculatePrice();
     });
   }
 
