@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sendit/FAQ/faqPage.dart';
 import 'package:sendit/home/ProfilePage.dart';
+import 'package:sendit/home/WelcomeScreen.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/home/historyPage.dart';
-import 'package:sendit/order/orderInformationPage.dart';
-import 'package:sendit/order/orderPage.dart';
 import 'auth/login.dart';
 import 'auth/register.dart';
+import 'Kurir/Auth/LoginKurir.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const LoginPage(),
+      home: WelcomeScreen(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   _MainScreenState createState() => _MainScreenState();

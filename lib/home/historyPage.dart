@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class HistoryPage extends StatelessWidget {
-  const HistoryPage({Key? key}) : super(key: key);
+  const HistoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFF6C63FF),
+        backgroundColor: const Color(0xFF6C63FF),
         elevation: 0,
         title: Row(
           children: [
@@ -16,8 +16,8 @@ class HistoryPage extends StatelessWidget {
               'assets/sendit.png', // Make sure to add this asset
               height: 24,
             ),
-            SizedBox(width: 8),
-            Text(
+            const SizedBox(width: 8),
+            const Text(
               'Sendit!',
               style: TextStyle(
                 fontSize: 20,
@@ -27,9 +27,9 @@ class HistoryPage extends StatelessWidget {
             ),
           ],
         ),
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.only(right: 16.0),
+            padding: EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
               backgroundImage:
                   AssetImage('assets/profile_image.png'), // Add this asset
@@ -41,8 +41,8 @@ class HistoryPage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
             child: Text(
               'Work History',
               style: TextStyle(
@@ -54,14 +54,14 @@ class HistoryPage extends StatelessWidget {
           ),
           Expanded(
             child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
                 _buildHistoryItem(
                   'J. Internasional I, Tanean Sumber...',
                   'Rp15.000',
                   Icons.local_shipping,
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildHistoryItem(
                   'Jl. Untung Suropati No. 32',
                   'Rp10.100',
@@ -78,39 +78,39 @@ class HistoryPage extends StatelessWidget {
 
   Widget _buildHistoryItem(String address, String price, IconData icon) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFF6C63FF),
+        color: const Color(0xFF6C63FF),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: Color(0xFF6C63FF)),
+            child: Icon(icon, color: const Color(0xFF6C63FF)),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   address,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   price,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart'; // Tambahkan ini untuk mengimpor service
 import 'package:sendit/payment/paymentPage.dart'; // Pastikan untuk mengimpor PaymentPage
 
 class OrderInformationPage extends StatefulWidget {
-  const OrderInformationPage({Key? key}) : super(key: key);
+  const OrderInformationPage({super.key});
 
   @override
   _OrderInformationPageState createState() => _OrderInformationPageState();
@@ -49,12 +49,12 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
             ),
           ],
         ),
-        actions: [
+        actions: const [
           CircleAvatar(
             backgroundImage: AssetImage('assets/profile_picture.png'), // Tambahkan aset ini
             radius: 16,
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
         ],
       ),
       body: SingleChildScrollView(

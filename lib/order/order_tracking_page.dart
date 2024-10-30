@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class OrderTrackingPage extends StatelessWidget {
-  const OrderTrackingPage({Key? key}) : super(key: key);
+  const OrderTrackingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class OrderTrackingPage extends StatelessWidget {
   Widget _buildCourierInfo() {
     return Row(
       children: [
-        CircleAvatar(
+        const CircleAvatar(
           radius: 30,
           backgroundImage: NetworkImage(
             'assets/darwin.png', // Ganti dengan URL gambar profil kurir
@@ -96,15 +96,15 @@ class OrderTrackingPage extends StatelessWidget {
     );
   }
   Widget _buildPickupAddress() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Pickup Address',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 8),
-        const Text(
+        SizedBox(height: 8),
+        Text(
           'Jl. Surya Sumantri BLOK A Nomor 17, Arab, Cicaheum',
           style: TextStyle(color: Colors.grey),
         ),
@@ -113,15 +113,15 @@ class OrderTrackingPage extends StatelessWidget {
   }
   
   Widget _buildDeliveryAddress() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Delivery Address',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 8),
-        const Text(
+        SizedBox(height: 8),
+        Text(
           'Jl. Telekomunikasi. 1, Terusan Buahbatu -\nBojongsong, Telkom University, Sukapura, Kec. Dayeuhkolot, Kabupaten Bandung, Jawa Barat 40257',
           style: TextStyle(color: Colors.grey),
         ),
@@ -130,9 +130,9 @@ class OrderTrackingPage extends StatelessWidget {
   }
 
   Widget _buildTotalWeight() {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const [
+      children: [
         Text(
           'Total Weight',
           style: TextStyle(fontWeight: FontWeight.bold),

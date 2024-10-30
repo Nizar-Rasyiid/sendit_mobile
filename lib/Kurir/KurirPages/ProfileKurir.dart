@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class Profilekurir extends StatelessWidget {
+  const Profilekurir({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +18,14 @@ class ProfilePage extends StatelessWidget {
               color: Colors.white,
             ),
             const SizedBox(width: 8),
-            const Text(
-              'Sendit!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            // const Text(
+            //   'Sendit!',
+            //   style: TextStyle(
+            //     fontSize: 20,
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.white,
+            //   ),
+            // ),
           ],
         ),
         actions: [
