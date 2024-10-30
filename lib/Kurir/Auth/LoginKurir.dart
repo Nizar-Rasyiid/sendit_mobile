@@ -3,6 +3,7 @@ import 'package:sendit/Kurir/Auth/RegisterKurir.dart';
 import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
 import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
 import 'package:sendit/main.dart';
+import 'package:sendit/auth/forgotpw.dart';
 
 class LoginKurir extends StatefulWidget {
   const LoginKurir({super.key});
@@ -14,6 +15,7 @@ class LoginKurir extends StatefulWidget {
 class _LoginKurirState extends State<LoginKurir> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+  bool _rememberMe = false;
 
   @override
   Widget build(BuildContext context) {
@@ -93,14 +95,35 @@ class _LoginKurirState extends State<LoginKurir> {
                     return null;
                   },
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // Navigate to forgot password page
-                    },
-                    child: const Text('Lupa Sandi?'),
-                  ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _rememberMe,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _rememberMe = value ?? false;
+                            });
+                          },
+                        ),
+                        const Text('Ingat Sandi'),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordPage(),
+                          ),
+                        );
+                      },
+                      child: const Text('Lupa Sandi?'),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
