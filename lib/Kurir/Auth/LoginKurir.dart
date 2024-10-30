@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/auth/RegisterKurir.dart';
+import 'package:sendit/Kurir/Auth/RegisterKurir.dart';
+import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
+import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
 import 'package:sendit/main.dart';
 
 class LoginKurir extends StatefulWidget {
@@ -108,7 +110,8 @@ class _LoginKurirState extends State<LoginKurir> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MainScreen()));
+                              builder: (context) =>
+                                  const MainKurirNavigation()));
                     }
                   },
                   style: ElevatedButton.styleFrom(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/auth/LoginKurir.dart';
-import 'login.dart';
+import 'package:sendit/Kurir/Auth/LoginKurir.dart';
+import '../../auth/login.dart';
 
 class Registerkurir extends StatefulWidget {
   const Registerkurir({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/auth/LoginKurir.dart';
+import 'package:sendit/Kurir/Auth/LoginKurir.dart';
 import 'package:wave/wave.dart';
 import 'package:wave/config.dart';
 import 'package:sendit/auth/login.dart';
@@ -34,7 +34,8 @@ class WelcomeScreen extends StatelessWidget {
                   gradientEnd: Alignment.topRight,
                 ),
                 waveAmplitude: 30,
-                size: const Size(double.infinity, 1000), // Ukuran tinggi gelombang
+                size: const Size(
+                    double.infinity, 1000), // Ukuran tinggi gelombang
               ),
             ),
           ),
@@ -42,7 +43,8 @@ class WelcomeScreen extends StatelessWidget {
           // Konten utama
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
               child: Column(
                 children: [
                   // Logo dan welcome text section
@@ -87,11 +89,18 @@ class WelcomeScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const LoginKurir()));
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
                                     backgroundColor: const Color(0xFF5C3BFF),
-                                    padding: const EdgeInsets.symmetric(vertical: 15),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -101,60 +110,41 @@ class WelcomeScreen extends StatelessWidget {
                                     ),
                                     elevation: 0,
                                   ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const LoginKurir()));
-                                    },
-                                    child: const Text(
-                                      'Kurir',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  child: const Text(
+                                    'Kurir',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   )),
                             ),
                             const SizedBox(width: 15),
                             Expanded(
                               child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const LoginPage()));
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: const Color(0xFF5C3BFF),
                                     backgroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(vertical: 15),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     elevation: 0,
                                   ),
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const LoginPage()));
-                                      },
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const LoginPage()));
-                                        },
-                                        child: const Text(
-                                          'Pengirim',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ))),
+                                  child: const Text(
+                                    'Pengirim',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
                             ),
                           ],
                         ),
