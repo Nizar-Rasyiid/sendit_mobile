@@ -68,15 +68,12 @@ class _OrderPageState extends State<OrderPage> {
         elevation: 0,
         title: Row(
           children: [
-            const SizedBox(width: 8),
-            const Text(
-              'Kirim Barang!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+                        Image.asset(
+              'assets/sendit.png', // Pastikan untuk menambahkan aset ini
+              height: 24,
+              color: Colors.white,
             ),
+            const SizedBox(width: 8),
           ],
         ),
         actions: const [
