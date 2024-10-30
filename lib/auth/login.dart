@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sendit/auth/forgotpw.dart'; // Pastikan nama ini sesuai dengan file yang ada
 import 'package:sendit/auth/register.dart';
 import 'package:sendit/main.dart';
+import 'package:sendit/auth/forgotpw.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,7 +14,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
-  bool _rememberMe = false; // Variabel untuk checkbox
+
+  bool _rememberMe = false;
+
 
   @override
   Widget build(BuildContext context) {
