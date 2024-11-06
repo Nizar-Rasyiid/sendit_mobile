@@ -23,8 +23,7 @@ class ChatPage extends StatelessWidget {
           children: [
             SizedBox(width: 10),
             CircleAvatar(
-              backgroundImage:
-                  AssetImage('assets/profile.jpg'), // Add a profile image here
+              backgroundImage: AssetImage('assets/profile.jpg'),
             ),
             SizedBox(width: 10),
             Column(
