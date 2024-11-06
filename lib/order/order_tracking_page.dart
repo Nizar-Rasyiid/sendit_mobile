@@ -76,7 +76,7 @@ class OrderTrackingPage extends StatelessWidget {
             children: [
               _buildTrackingStatus(),
               const SizedBox(height: 20),
-              _buildCourierInfo(),
+              _buildCourierInfo(context),
               const SizedBox(height: 20),
               _buildPickupAddress(),
               const SizedBox(height: 20),
@@ -258,7 +258,7 @@ class OrderTrackingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCourierInfo() {
+  Widget _buildCourierInfo(BuildContext context) {
     return Row(
       children: [
         const CircleAvatar(
@@ -284,13 +284,15 @@ class OrderTrackingPage extends StatelessWidget {
                 children: [
                   const SizedBox(width: 0), // Hapus padding kiri
                   IconButton(
-                    padding:
-                        EdgeInsets.zero, // Hapus padding internal icon button
+                    padding: EdgeInsets.zero,
                     constraints:
                         const BoxConstraints(), // Hapus constraints default
                     icon: const Icon(Icons.chat, color: Color(0xFF6C63FF)),
                     onPressed: () {
-                      // Handle chat action
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChatPage()),
+                      );
                     },
                   ),
                   const SizedBox(width: 24),
