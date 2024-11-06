@@ -23,7 +23,6 @@ class _HomeKurirState extends State<HomeKurir> {
       body: SafeArea(
         child: Column(
           children: [
-            // AppBar section
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
@@ -58,7 +57,6 @@ class _HomeKurirState extends State<HomeKurir> {
                 ],
               ),
             ),
-
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
@@ -90,6 +88,15 @@ class _HomeKurirState extends State<HomeKurir> {
                             onChanged: (bool value) {
                               setState(() {
                                 isSwitched = value;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      isSwitched
+                                          ? 'Anda mulai menerima pesanan'
+                                          : 'Anda tidak menerima pesanan',
+                                    ),
+                                  ),
+                                );
                               });
                             },
                           ),
@@ -119,7 +126,8 @@ class _HomeKurirState extends State<HomeKurir> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => OrderListPage()),
+                                MaterialPageRoute(
+                                    builder: (context) => OrderListPage()),
                               );
                             },
                             borderRadius: BorderRadius.circular(16),
@@ -135,7 +143,8 @@ class _HomeKurirState extends State<HomeKurir> {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         const Text(
                                           'Terima Pesanan!',
@@ -180,7 +189,8 @@ class _HomeKurirState extends State<HomeKurir> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => FAQPage()),
+                                MaterialPageRoute(
+                                    builder: (context) => FAQPage()),
                               );
                             },
                             borderRadius: BorderRadius.circular(16),
@@ -196,7 +206,8 @@ class _HomeKurirState extends State<HomeKurir> {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         const Text(
                                           'FAQ!',

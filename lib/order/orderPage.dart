@@ -346,12 +346,11 @@ class _OrderPageState extends State<OrderPage> {
     );
 
     setState(() {
-      selectedWeight = selected!;
+      // selectedWeight = selected!;
       _calculatePrice();
     });
   }
 
-  // Widget untuk menampilkan informasi harga
   Widget _buildPriceInfo() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

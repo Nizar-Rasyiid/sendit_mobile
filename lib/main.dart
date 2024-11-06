@@ -34,7 +34,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'SendIt!',
       theme: ThemeData(
-        // primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
