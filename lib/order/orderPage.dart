@@ -68,7 +68,7 @@ class _OrderPageState extends State<OrderPage> {
         elevation: 0,
         title: Row(
           children: [
-                        Image.asset(
+            Image.asset(
               'assets/sendit.png', // Pastikan untuk menambahkan aset ini
               height: 24,
               color: Colors.white,

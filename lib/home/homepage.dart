@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
                     setState(() {
                       _isPeriodicNotificationEnabled = value;
                       if (value) {
-                        LocalNotifications.showPeriodicNotifications(
+                        LocalNotifications.showSimpleNotification(
                           title: "Bro, paketnya udah dikirim?",
                           body: "Jangan sampai teman kamu nungguin terus!",
                           payload: "This is periodic data",

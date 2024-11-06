@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sendit/order/order_chat.dart';
 
 class OrderTrackingPage extends StatelessWidget {
   const OrderTrackingPage({super.key});
@@ -25,11 +26,7 @@ class OrderTrackingPage extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Tutup dialog
-                // Kembali ke halaman order
-                Navigator.of(context).pushReplacementNamed('/orderPage'); // Ganti dengan nama route yang sesuai
-                // Atau gunakan Navigator.pop() jika ingin kembali ke halaman sebelumnya
-                // Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
               child: const Text(
                 'Ya',
@@ -62,7 +59,10 @@ class OrderTrackingPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.chat),
             onPressed: () {
-              // Handle chat action
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatPage()),
+              );
             },
             color: Colors.white,
           ),
@@ -120,7 +120,6 @@ class OrderTrackingPage extends StatelessWidget {
     );
   }
 
-  // ... (sisanya kode tetap sama seperti sebelumnya)
   Widget _buildTrackingStatus() {
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -259,56 +258,60 @@ class OrderTrackingPage extends StatelessWidget {
     );
   }
 
-Widget _buildCourierInfo() {
-  return Row(
-    children: [
-      const CircleAvatar(
-        radius: 30,
-        backgroundImage: NetworkImage(
-          'assets/darwin.png',
+  Widget _buildCourierInfo() {
+    return Row(
+      children: [
+        const CircleAvatar(
+          radius: 30,
+          backgroundImage: NetworkImage(
+            'assets/darwin.png',
+          ),
         ),
-      ),
-      const SizedBox(width: 16),
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Muhammad Irawan',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const Text(
-              'D 1203 FE',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            Row(
-              children: [
-                const SizedBox(width: 0), // Hapus padding kiri
-                IconButton(
-                  padding: EdgeInsets.zero, // Hapus padding internal icon button
-                  constraints: const BoxConstraints(), // Hapus constraints default
-                  icon: const Icon(Icons.chat, color: Color(0xFF6C63FF)),
-                  onPressed: () {
-                    // Handle chat action
-                  },
-                ),
-                const SizedBox(width: 24),
-                IconButton(
-                  padding: EdgeInsets.zero, // Hapus padding internal icon button
-                  constraints: const BoxConstraints(), // Hapus constraints default
-                  icon: const Icon(Icons.phone, color: Color(0xFF6C63FF)),
-                  onPressed: () {
-                    // Handle call action
-                  },
-                ),
-              ],
-            ),
-          ],
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Muhammad Irawan',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'D 1203 FE',
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              Row(
+                children: [
+                  const SizedBox(width: 0), // Hapus padding kiri
+                  IconButton(
+                    padding:
+                        EdgeInsets.zero, // Hapus padding internal icon button
+                    constraints:
+                        const BoxConstraints(), // Hapus constraints default
+                    icon: const Icon(Icons.chat, color: Color(0xFF6C63FF)),
+                    onPressed: () {
+                      // Handle chat action
+                    },
+                  ),
+                  const SizedBox(width: 24),
+                  IconButton(
+                    padding:
+                        EdgeInsets.zero, // Hapus padding internal icon button
+                    constraints:
+                        const BoxConstraints(), // Hapus constraints default
+                    icon: const Icon(Icons.phone, color: Color(0xFF6C63FF)),
+                    onPressed: () {
+                      // Handle call action
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
   Widget _buildPickupAddress() {
     return const Column(
@@ -326,7 +329,7 @@ Widget _buildCourierInfo() {
       ],
     );
   }
-  
+
   Widget _buildDeliveryAddress() {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,7 +378,8 @@ Widget _buildCourierInfo() {
     );
   }
 
-  Widget _buildPaymentDetailRow(String title, String amount, {bool isTotal = false}) {
+  Widget _buildPaymentDetailRow(String title, String amount,
+      {bool isTotal = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
