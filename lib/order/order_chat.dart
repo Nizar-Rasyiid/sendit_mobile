@@ -22,13 +22,6 @@ class ChatPage extends StatelessWidget {
         title: Row(
           children: [
             SizedBox(width: 10),
-            IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            SizedBox(width: 10),
             CircleAvatar(
               backgroundImage:
                   AssetImage('assets/profile.jpg'), // Add a profile image here
