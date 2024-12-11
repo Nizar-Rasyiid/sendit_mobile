@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
+import 'package:sendit/Kurir/Auth/RegisterKurir.dart';
+import 'package:sendit/main.dart';
+import 'package:sendit/auth/forgotpw.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class LoginKurir extends StatefulWidget {
+  const LoginKurir({super.key});
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _LoginKurirState createState() => _LoginKurirState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _LoginKurirState extends State<LoginKurir> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
+  bool _rememberMe = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,43 +42,25 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  'Daftar',
+                  'Login Sebagai Kurir',
                   style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 1, 1, 10)),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Nama Pengguna',
+                    labelText: 'Nama Kurir/Email',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    prefixIcon: const Icon(Icons.person),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Mohon masukkan nama pengguna';
+                      return 'Mohon masukkan nama Kurir atau email';
                     }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    prefixIcon: const Icon(Icons.email),
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Mohon masukkan email';
-                    }
-                    // Add email validation if needed
                     return null;
                   },
                 ),
@@ -109,48 +93,41 @@ class _RegisterPageState extends State<RegisterPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Konfirmasi Kata Sandi',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _rememberMe,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _rememberMe = value ?? false;
+                            });
+                          },
+                        ),
+                        const Text('Ingat Sandi'),
+                      ],
                     ),
-                    prefixIcon: const Icon(Icons.lock),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureConfirmPassword
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                      ),
+                    TextButton(
                       onPressed: () {
-                        setState(() {
-                          _obscureConfirmPassword = !_obscureConfirmPassword;
-                        });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordPage(),
+                          ),
+                        );
                       },
+                      child: const Text('Lupa Sandi?'),
                     ),
-                  ),
-                  obscureText: _obscureConfirmPassword,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Mohon konfirmasi kata sandi';
-                    }
-                    return null;
-                  },
+                  ],
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Process data
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()));
-                    }
                   },
                   style: ElevatedButton.styleFrom(
-                    // iconColor: Colors.blue,
                     backgroundColor: const Color.fromARGB(255, 66, 72, 255),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -158,33 +135,68 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: const Text(
-                    'Daftar',
+                    'Masuk',
                     style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white),
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Divider(
+                        thickness: 1,
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        "Atau",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    const Expanded(
+                      child: Divider(
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    // Ini gimana implemennya??
+                  },
+                  icon: const Icon(Icons.apple),
+                  label: const Text('Lanjutkan dengan Apple ID'),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(
+                      color: Colors.indigo,
+                      width: 2,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                 ),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Sudah memiliki akun?'),
+                    const Text('Belum memiliki akun?'),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginPage()));
+                                builder: (context) => const Registerkurir()));
                       },
-                      child: const Text('Masuk'),
+                      child: const Text('Daftar'),
                     ),
                   ],
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Dengan mendaftar berarti Anda setuju dengan\nSyarat & Ketentuan yang berlaku',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
             ),

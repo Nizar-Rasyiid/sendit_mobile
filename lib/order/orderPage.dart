@@ -15,8 +15,9 @@ class _OrderPageState extends State<OrderPage> {
 
   // Controllers for address inputs
   final TextEditingController senderAddressController = TextEditingController();
-  final TextEditingController receiverAddressController = TextEditingController();
-  
+  final TextEditingController receiverAddressController =
+      TextEditingController();
+
   // Error messages
   String? senderAddressError;
   String? receiverAddressError;
@@ -47,8 +48,12 @@ class _OrderPageState extends State<OrderPage> {
   // Validate form inputs
   bool _validateInputs() {
     setState(() {
-      senderAddressError = senderAddressController.text.isEmpty ? 'Alamat pengirim harus diisi.' : null;
-      receiverAddressError = receiverAddressController.text.isEmpty ? 'Alamat penerima harus diisi.' : null;
+      senderAddressError = senderAddressController.text.isEmpty
+          ? 'Alamat pengirim harus diisi.'
+          : null;
+      receiverAddressError = receiverAddressController.text.isEmpty
+          ? 'Alamat penerima harus diisi.'
+          : null;
     });
 
     return senderAddressError == null && receiverAddressError == null;
@@ -64,19 +69,11 @@ class _OrderPageState extends State<OrderPage> {
         title: Row(
           children: [
             Image.asset(
-              'assets/sendit.png', // Pastikan aset ini ada
+              'assets/sendit.png', // Pastikan untuk menambahkan aset ini
               height: 24,
               color: Colors.white,
             ),
             const SizedBox(width: 8),
-            const Text(
-              'Sendit!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
           ],
         ),
         actions: const [
@@ -114,7 +111,8 @@ class _OrderPageState extends State<OrderPage> {
                 ),
               ),
               const SizedBox(height: 8),
-              _buildAddressInput(senderAddressController, senderAddressError, 'Masukkan alamat pengirim...', Icons.home),
+              _buildAddressInput(senderAddressController, senderAddressError,
+                  'Masukkan alamat pengirim...', Icons.home),
               const SizedBox(height: 12),
 
               // Input untuk alamat penerima
@@ -126,7 +124,11 @@ class _OrderPageState extends State<OrderPage> {
                 ),
               ),
               const SizedBox(height: 8),
-              _buildAddressInput(receiverAddressController, receiverAddressError, 'Cari alamat penerima...', Icons.search),
+              _buildAddressInput(
+                  receiverAddressController,
+                  receiverAddressError,
+                  'Cari alamat penerima...',
+                  Icons.search),
 
               const SizedBox(height: 12),
               _buildDistanceInfo(), // Informasi jarak pengiriman
@@ -202,7 +204,8 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  Widget _buildAddressInput(TextEditingController controller, String? errorText, String hint, IconData icon) {
+  Widget _buildAddressInput(TextEditingController controller, String? errorText,
+      String hint, IconData icon) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -211,7 +214,8 @@ class _OrderPageState extends State<OrderPage> {
           decoration: BoxDecoration(
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(25),
-            border: Border.all(color: errorText == null ? Colors.transparent : Colors.red),
+            border: Border.all(
+                color: errorText == null ? Colors.transparent : Colors.red),
           ),
           child: Row(
             children: [
@@ -341,15 +345,12 @@ class _OrderPageState extends State<OrderPage> {
       },
     );
 
-    if (selected != null) {
-      setState(() {
-        selectedWeight = selected;
-        _calculatePrice(); // Hitung ulang harga setelah berat dipilih
-      });
-    }
+    setState(() {
+      // selectedWeight = selected!;
+      _calculatePrice();
+    });
   }
 
-  // Widget untuk menampilkan informasi harga
   Widget _buildPriceInfo() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

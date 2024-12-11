@@ -14,8 +14,10 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
   final TextEditingController senderNameController = TextEditingController();
   final TextEditingController senderNumberController = TextEditingController();
   final TextEditingController receiverNameController = TextEditingController();
-  final TextEditingController receiverNumberController = TextEditingController();
-  final TextEditingController otherPackageController = TextEditingController(); // Controller untuk input jenis paket lainnya
+  final TextEditingController receiverNumberController =
+      TextEditingController();
+  final TextEditingController otherPackageController =
+      TextEditingController(); // Controller untuk input jenis paket lainnya
 
   String? senderNameError;
   String? senderNumberError;
@@ -39,19 +41,12 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
               color: Colors.white,
             ),
             const SizedBox(width: 8),
-            const Text(
-              'Sendit!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
           ],
         ),
         actions: const [
           CircleAvatar(
-            backgroundImage: AssetImage('assets/profile_picture.png'), // Tambahkan aset ini
+            backgroundImage:
+                AssetImage('assets/profile_picture.png'), // Tambahkan aset ini
             radius: 16,
           ),
           SizedBox(width: 16),
@@ -71,9 +66,11 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
               ),
             ),
             const SizedBox(height: 24),
-            _buildInputField('Nama Pengirim', senderNameController, senderNameError),
+            _buildInputField(
+                'Nama Pengirim', senderNameController, senderNameError),
             const SizedBox(height: 16),
-            _buildNumberInputField('Nomor Pengirim', senderNumberController, senderNumberError),
+            _buildNumberInputField(
+                'Nomor Pengirim', senderNumberController, senderNumberError),
             const SizedBox(height: 24),
 
             // Informasi Penerima
@@ -85,9 +82,11 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
               ),
             ),
             const SizedBox(height: 24),
-            _buildInputField('Nama Penerima', receiverNameController, receiverNameError),
+            _buildInputField(
+                'Nama Penerima', receiverNameController, receiverNameError),
             const SizedBox(height: 16),
-            _buildNumberInputField('Nomor Penerima', receiverNumberController, receiverNumberError),
+            _buildNumberInputField('Nomor Penerima', receiverNumberController,
+                receiverNumberError),
             const SizedBox(height: 24),
 
             // Detail Paket
@@ -112,7 +111,8 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
               }
             }),
             const SizedBox(height: 16),
-            if (packageTypeError != null) ...[ // Menampilkan pesan kesalahan untuk pemilihan paket
+            if (packageTypeError != null) ...[
+              // Menampilkan pesan kesalahan untuk pemilihan paket
               const SizedBox(height: 4),
               Text(
                 packageTypeError!,
@@ -121,7 +121,8 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
             ],
             // Input untuk jenis paket lainnya jika dipilih
             if (selectedPackageType == 'Lainnya') ...[
-              _buildInputField('Jenis Paket Lainnya', otherPackageController, otherPackageError),
+              _buildInputField('Jenis Paket Lainnya', otherPackageController,
+                  otherPackageError),
             ],
             const SizedBox(height: 24),
 
@@ -132,7 +133,8 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
                   // Navigasi ke halaman PaymentPage ketika tombol ditekan
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const PaymentPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const PaymentPage()),
                   );
                 }
               },
@@ -143,27 +145,17 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
                   borderRadius: BorderRadius.circular(25),
                 ),
               ),
-              child: const Text('Lanjutkan', style: TextStyle(fontSize: 16, color: Colors.white)),
+              child: const Text('Lanjutkan',
+                  style: TextStyle(fontSize: 16, color: Colors.white)),
             ),
-
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: const Color(0xFF6C63FF),
-        unselectedItemColor: Colors.grey,
-        currentIndex: 0,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
-          BottomNavigationBarItem(icon: Icon(Icons.location_on), label: 'Tracking'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
       ),
     );
   }
 
-  Widget _buildInputField(String label, TextEditingController controller, String? error) {
+  Widget _buildInputField(
+      String label, TextEditingController controller, String? error) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -172,7 +164,9 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
           decoration: BoxDecoration(
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: error != null ? Colors.red : Colors.transparent, width: 1.5),
+            border: Border.all(
+                color: error != null ? Colors.red : Colors.transparent,
+                width: 1.5),
           ),
           child: TextField(
             controller: controller,
@@ -194,7 +188,8 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
     );
   }
 
-  Widget _buildNumberInputField(String label, TextEditingController controller, String? error) {
+  Widget _buildNumberInputField(
+      String label, TextEditingController controller, String? error) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -203,14 +198,19 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
           decoration: BoxDecoration(
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: error != null ? Colors.red : Colors.transparent, width: 1.5),
+            border: Border.all(
+                color: error != null ? Colors.red : Colors.transparent,
+                width: 1.5),
           ),
           child: TextField(
             controller: controller,
-            keyboardType: TextInputType.number, // Mengatur keyboard hanya untuk angka
+            keyboardType:
+                TextInputType.number, // Mengatur keyboard hanya untuk angka
             inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly, // Memastikan hanya angka yang dapat dimasukkan
-              LengthLimitingTextInputFormatter(13), // Membatasi input hingga 13 karakter
+              FilteringTextInputFormatter
+                  .digitsOnly, // Memastikan hanya angka yang dapat dimasukkan
+              LengthLimitingTextInputFormatter(
+                  13), // Membatasi input hingga 13 karakter
             ],
             decoration: InputDecoration(
               labelText: label,
@@ -237,14 +237,16 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
         _buildPackageButton('Makanan', Icons.fastfood, onPackageSelected),
         _buildPackageButton('Baju', Icons.checkroom, onPackageSelected),
         _buildPackageButton('Dokumen', Icons.folder, onPackageSelected),
-        _buildPackageButton('Obat-obatan', Icons.medical_services, onPackageSelected),
+        _buildPackageButton(
+            'Obat-obatan', Icons.medical_services, onPackageSelected),
         _buildPackageButton('Buku', Icons.book, onPackageSelected),
         _buildPackageButton('Lainnya', Icons.add, onPackageSelected),
       ],
     );
   }
 
-  Widget _buildPackageButton(String label, IconData icon, Function onPackageSelected) {
+  Widget _buildPackageButton(
+      String label, IconData icon, Function onPackageSelected) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -257,15 +259,21 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: selectedPackageType == label ? const Color(0xFF6C63FF) : Colors.grey[300],
+              color: selectedPackageType == label
+                  ? const Color(0xFF6C63FF)
+                  : Colors.grey[300],
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: selectedPackageType == label ? Colors.white : Colors.black),
+            child: Icon(icon,
+                color:
+                    selectedPackageType == label ? Colors.white : Colors.black),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(color: selectedPackageType == label ? Colors.black : Colors.black),
+            style: TextStyle(
+                color:
+                    selectedPackageType == label ? Colors.black : Colors.black),
           ),
         ],
       ),
@@ -288,7 +296,8 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
       });
     }
 
-    if (senderNumberController.text.isEmpty || senderNumberController.text.length > 13) {
+    if (senderNumberController.text.isEmpty ||
+        senderNumberController.text.length > 13) {
       setState(() {
         senderNumberError = 'Nomor Pengirim harus diisi dan maksimal 13 angka.';
       });
@@ -300,9 +309,11 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
       });
     }
 
-    if (receiverNumberController.text.isEmpty || receiverNumberController.text.length > 13) {
+    if (receiverNumberController.text.isEmpty ||
+        receiverNumberController.text.length > 13) {
       setState(() {
-        receiverNumberError = 'Nomor Penerima harus diisi dan maksimal 13 angka.';
+        receiverNumberError =
+            'Nomor Penerima harus diisi dan maksimal 13 angka.';
       });
     }
 
@@ -311,7 +322,8 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
       setState(() {
         packageTypeError = 'Silakan pilih jenis paket.';
       });
-    } else if (selectedPackageType == 'Lainnya' && otherPackageController.text.isEmpty) {
+    } else if (selectedPackageType == 'Lainnya' &&
+        otherPackageController.text.isEmpty) {
       setState(() {
         otherPackageError = 'Jenis Paket Lainnya harus diisi.';
       });
@@ -319,10 +331,10 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
 
     // Mengembalikan false jika ada kesalahan
     return senderNameError == null &&
-           senderNumberError == null &&
-           receiverNameError == null &&
-           receiverNumberError == null &&
-           packageTypeError == null &&
-           otherPackageError == null;
+        senderNumberError == null &&
+        receiverNameError == null &&
+        receiverNumberError == null &&
+        packageTypeError == null &&
+        otherPackageError == null;
   }
 }

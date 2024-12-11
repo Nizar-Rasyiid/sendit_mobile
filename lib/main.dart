@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/Kurir/KurirPages/HistoryKurir.dart';
-import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
-import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
+import 'package:sendit/FAQ/faqPage.dart';
 import 'package:sendit/home/ProfilePage.dart';
 import 'package:sendit/home/WelcomeScreen.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/home/historyPage.dart';
+import 'package:sendit/local_notifications.dart';
+import 'package:sendit/order/orderInformationPage.dart';
+import 'package:sendit/order/orderPage.dart';
+import 'package:sendit/order/order_chat.dart';
 import 'auth/login.dart';
 import 'auth/register.dart';
 import 'Kurir/Auth/LoginKurir.dart';
+import 'order/orderPage.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalNotifications.init();
   runApp(const MyApp());
 }
 
@@ -22,7 +27,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'SendIt!',
       theme: ThemeData(
-        // primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
@@ -42,7 +46,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
-        '/loginKurir': (context) => const LoginKurir(),
+        '/main': (context) => const MainScreen(),
+        '/OrderPage': (context) => const OrderPage(),
+        '/FAQPage': (context) => FAQPage(),
       },
     );
   }

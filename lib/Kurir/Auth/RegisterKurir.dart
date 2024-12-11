@@ -146,7 +146,7 @@ class _RegisterkurirState extends State<Registerkurir> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginPage()));
+                                builder: (context) => const LoginKurir()));
                       }
                     },
                     style: ElevatedButton.styleFrom(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sendit/Kurir/KurirPages/HistoryKurir.dart';
 import 'BottomNavigation.dart';
 import 'package:sendit/Kurir/KurirPages/OrderList.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:sendit/FAQ/faqPage.dart';
 
 class HomeKurir extends StatefulWidget {
   const HomeKurir({super.key});
@@ -12,81 +14,72 @@ class HomeKurir extends StatefulWidget {
 
 class _HomeKurirState extends State<HomeKurir> {
   bool isSwitched = false;
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEEF2FF),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF6C63FF),
-        elevation: 0,
-        title: SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset(
-                'assets/sendit.png',
-                height: 24,
-                color: Colors.white,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(16),
+      backgroundColor: const Color(0xFF6C63FF),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        'assets/sendit.png',
+                        height: 24,
+                        color: Colors.white,
+                      ),
+                    ],
                   ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                  Row(
                     children: [
                       Text(
                         'Muhammad',
                         style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
-                      ),
-                      SizedBox(width: 4),
-                      CircleAvatar(
-                        radius: 12,
-                        backgroundColor: Colors.white,
-                        child: Text(
-                          'M',
-                          style: TextStyle(
-                            color: Color(0xFF6C63FF),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
+                          color: Colors.white,
+                          fontSize: 14,
                         ),
+                      ),
+                      const SizedBox(width: 8),
+                      const CircleAvatar(
+                        radius: 16,
+                        backgroundColor: Colors.white,
+                        backgroundImage: AssetImage('assets/profile.png'),
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
+            ),
             Expanded(
-              child: SingleChildScrollView(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Switch section
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
                             'Menerima Pesanan',
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           Switch(
@@ -95,35 +88,37 @@ class _HomeKurirState extends State<HomeKurir> {
                             onChanged: (bool value) {
                               setState(() {
                                 isSwitched = value;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      isSwitched
+                                          ? 'Anda mulai menerima pesanan'
+                                          : 'Anda tidak menerima pesanan',
+                                    ),
+                                  ),
+                                );
                               });
                             },
-                            inactiveTrackColor: const Color(0xFFEEF2FF),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
-                      Container(
-                        width: double.infinity,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFEEF2FF),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Center(
-                          child: Image.asset(
-                            'assets/kurir.png',
-                            width: 150,
-                            height: 150,
-                            fit: BoxFit.contain,
-                          ),
+                      const SizedBox(height: 24),
+
+                      // Illustration section
+                      Center(
+                        child: Image.asset(
+                          'assets/kurir.png',
+                          height: 200,
+                          fit: BoxFit.contain,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
+
+                      // Tombol Pesanan
                       Container(
-                        width: double.infinity,
                         decoration: BoxDecoration(
                           color: const Color(0xFF6C63FF),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         child: Material(
                           color: Colors.transparent,
@@ -135,15 +130,15 @@ class _HomeKurirState extends State<HomeKurir> {
                                     builder: (context) => OrderListPage()),
                               );
                             },
+                            borderRadius: BorderRadius.circular(16),
                             child: Padding(
-                              padding: const EdgeInsets.all(20),
+                              padding: const EdgeInsets.all(16),
                               child: Row(
                                 children: [
-                                  Image.asset(
-                                    'assets/box.png',
-                                    width: 24,
-                                    height: 24,
+                                  PhosphorIcon(
+                                    Icons.local_shipping_outlined,
                                     color: Colors.white,
+                                    size: 24,
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
@@ -155,15 +150,14 @@ class _HomeKurirState extends State<HomeKurir> {
                                           'Terima Pesanan!',
                                           style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        Text(
-                                          'Bersiap mengantar paket ke tempat tujuan',
+                                        const Text(
+                                          'Banyak Pelanggan yang menunggu \nkehadiran mu, semangat!',
                                           style: TextStyle(
-                                            color:
-                                                Colors.white.withOpacity(0.8),
+                                            color: Colors.white,
                                             fontSize: 12,
                                           ),
                                         ),
@@ -181,20 +175,27 @@ class _HomeKurirState extends State<HomeKurir> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
+
+                      // ini tombol FAQ!
                       Container(
-                        width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEEF2FF),
-                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            onTap: () {},
-                            borderRadius: BorderRadius.circular(15),
-                            child: const Padding(
-                              padding: EdgeInsets.all(20),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FAQPage()),
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(16),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
                               child: Row(
                                 children: [
                                   Icon(
@@ -212,12 +213,12 @@ class _HomeKurirState extends State<HomeKurir> {
                                           'FAQ!',
                                           style: TextStyle(
                                             color: Color(0xFF6C63FF),
-                                            fontSize: 16,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        Text(
-                                          'Butuh bantuan pengiriman?',
+                                        const Text(
+                                          'Anda memiliki pertanyaan yang ingin Anda sampaikan?\nSilahkan mengakses fitur ini',
                                           style: TextStyle(
                                             color: Colors.black54,
                                             fontSize: 12,

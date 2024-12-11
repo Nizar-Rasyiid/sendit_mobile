@@ -30,9 +30,7 @@ class Profilekurir extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              // Handle profile editing
-            },
+            onPressed: () {},
             child: const Text(
               'Profile',
               style: TextStyle(color: Colors.white),
@@ -46,9 +44,9 @@ class Profilekurir extends StatelessWidget {
             const SizedBox(height: 20),
             _buildProfileImage(),
             const SizedBox(height: 20),
-            _buildInfoCard('Name', 'Catheez Putri'),
+            _buildInfoCard('Name', 'Muhammad'),
             _buildInfoCard('Phone Number', '+62 xxx-xxxx-xxxx'),
-            _buildInfoCard('Email', 'Catheezputri@gmail.com'),
+            _buildInfoCard('Email', 'Muhammad@gmail.com'),
             _buildInfoCard('Password', 'xxxxxxxx'),
           ],
         ),
