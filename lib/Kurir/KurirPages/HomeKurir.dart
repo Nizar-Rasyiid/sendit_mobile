@@ -4,7 +4,7 @@ import 'BottomNavigation.dart';
 import 'package:sendit/Kurir/KurirPages/OrderList.dart';
 
 class HomeKurir extends StatefulWidget {
-  const HomeKurir({Key? key}) : super(key: key);
+  const HomeKurir({super.key});
 
   @override
   _HomeKurirState createState() => _HomeKurirState();
@@ -16,7 +16,7 @@ class _HomeKurirState extends State<HomeKurir> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFEEF2FF),
+      backgroundColor: const Color(0xFFEEF2FF),
       appBar: AppBar(
         backgroundColor: const Color(0xFF6C63FF),
         elevation: 0,
@@ -38,18 +38,18 @@ class _HomeKurirState extends State<HomeKurir> {
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Text(
+                      Text(
                         'Muhammad',
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.white),
                       ),
-                      const SizedBox(width: 4),
-                      const CircleAvatar(
+                      SizedBox(width: 4),
+                      CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.white,
                         child: Text(
@@ -102,7 +102,6 @@ class _HomeKurirState extends State<HomeKurir> {
                         ],
                       ),
                       const SizedBox(height: 20),
-
                       Container(
                         width: double.infinity,
                         height: 200,
@@ -120,7 +119,6 @@ class _HomeKurirState extends State<HomeKurir> {
                         ),
                       ),
                       const SizedBox(height: 20),
-
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -133,7 +131,8 @@ class _HomeKurirState extends State<HomeKurir> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => OrderListPage()),
+                                MaterialPageRoute(
+                                    builder: (context) => OrderListPage()),
                               );
                             },
                             child: Padding(
@@ -149,7 +148,8 @@ class _HomeKurirState extends State<HomeKurir> {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         const Text(
                                           'Terima Pesanan!',
@@ -162,7 +162,8 @@ class _HomeKurirState extends State<HomeKurir> {
                                         Text(
                                           'Bersiap mengantar paket ke tempat tujuan',
                                           style: TextStyle(
-                                            color: Colors.white.withOpacity(0.8),
+                                            color:
+                                                Colors.white.withOpacity(0.8),
                                             fontSize: 12,
                                           ),
                                         ),
@@ -181,7 +182,6 @@ class _HomeKurirState extends State<HomeKurir> {
                         ),
                       ),
                       const SizedBox(height: 12),
-
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -193,21 +193,22 @@ class _HomeKurirState extends State<HomeKurir> {
                           child: InkWell(
                             onTap: () {},
                             borderRadius: BorderRadius.circular(15),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
+                            child: const Padding(
+                              padding: EdgeInsets.all(20),
                               child: Row(
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.help_outline,
                                     color: Color(0xFF6C63FF),
                                     size: 24,
                                   ),
-                                  const SizedBox(width: 12),
+                                  SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
+                                        Text(
                                           'FAQ!',
                                           style: TextStyle(
                                             color: Color(0xFF6C63FF),
@@ -215,7 +216,7 @@ class _HomeKurirState extends State<HomeKurir> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        const Text(
+                                        Text(
                                           'Butuh bantuan pengiriman?',
                                           style: TextStyle(
                                             color: Colors.black54,
@@ -225,7 +226,7 @@ class _HomeKurirState extends State<HomeKurir> {
                                       ],
                                     ),
                                   ),
-                                  const Icon(
+                                  Icon(
                                     Icons.arrow_forward_ios,
                                     color: Color(0xFF6C63FF),
                                     size: 16,
