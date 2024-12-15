@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-<<<<<<< HEAD
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-=======
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -47,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
->>>>>>> origin/main
+
 
   @override
   Widget build(BuildContext context) {
