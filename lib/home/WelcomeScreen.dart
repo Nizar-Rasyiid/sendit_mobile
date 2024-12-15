@@ -33,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
                   gradientBegin: Alignment.bottomLeft,
                   gradientEnd: Alignment.topRight,
                 ),
-                waveAmplitude: 30,
+                waveAmplitude: 10,
                 size: const Size(
                     double.infinity, 1000), // Ukuran tinggi gelombang
               ),
