@@ -1,31 +1,47 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:http/http.dart' as http;
 
-class OrderListPage extends StatelessWidget {
-  OrderListPage({super.key});
+class OrderListPage extends StatefulWidget {
+  const OrderListPage({super.key});
 
-  final List<Map<String, String>> orders = [
-    {
-      'jemput': 'Jl. Telekomunikasi 1',
-      'antar': 'Jl. BuahBakar',
-      'tarif': 'Rp.35.000',
-      'jarak': '10 km',
-    },
-    {
-      'jemput': 'Jl. Contoh Alamat No. 3',
-      'antar': 'Jl. Contoh Alamat No. 4',
-      'tarif': 'Rp.150.000',
-      'jarak': '15 km',
-    },
-    {
-      'jemput': 'Jl. Contoh Alamat No. 5 nwadnwndanndwndawndwa',
-      'antar': 'Jl. Contoh Alamat No. 6',
-      'tarif': 'Rp.200.000',
-      'jarak': '20 km',
-    },
+  @override
+  State<OrderListPage> createState() => _OrderListPageState();
+}
 
+class _OrderListPageState extends State<OrderListPage> {
+  late Future<List<Map<String, dynamic>>> _orders;
 
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _orders = fetchOrders();
+  }
+
+  Future<List<Map<String, dynamic>>> fetchOrders() async {
+    const apiUrl = "http://192.168.1.5:8000/api/pemesanan"; // URL API Anda
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+
+        
+        return data.map((item) {
+          return {
+            'lokasi_jemput': item['lokasi_jemput'] ?? 'Alamat tidak tersedia',
+            'lokasi_tujuan': item['lokasi_tujuan'] ?? 'Alamat tidak tersedia',
+            'harga': item['harga']?.toString() ?? 'Rp.0',
+            'jarak': item['jarak']?.toString() ?? '0 km',
+          };
+        }).toList();
+      } else {
+        throw Exception('Failed to load orders');
+      }
+    } catch (error) {
+      throw Exception('Error fetching orders: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +59,24 @@ class OrderListPage extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      body: ListView.builder(
-        itemCount: orders.length,
-        itemBuilder: (context, index) {
-          return OrderItem(order: orders[index]);
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _orders,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No orders found'));
+          } else {
+            final orders = snapshot.data!;
+            return ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (context, index) {
+                return OrderItem(order: orders[index]);
+              },
+            );
+          }
         },
       ),
     );
@@ -54,7 +84,7 @@ class OrderListPage extends StatelessWidget {
 }
 
 class OrderItem extends StatelessWidget {
-  final Map<String, String> order;
+  final Map<String, dynamic> order;
 
   const OrderItem({required this.order, super.key});
 
@@ -72,31 +102,25 @@ class OrderItem extends StatelessWidget {
         children: [
           Row(
             children: [
-
               const PhosphorIcon(
-
                 PhosphorIconsDuotone.truck,
                 color: Colors.white,
                 size: 30,
               ),
-
               const SizedBox(width: 10),
-
               Expanded(
                 child: Text(
-                  order['jemput'] ?? 'Alamat tidak tersedia',
+                  'Jemput: ${order['lokasi_jemput']}',
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
               ),
-
               const SizedBox(width: 10),
-
               Text(
-                order['jarak'] ?? '',
+                order['jarak'],
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -105,24 +129,20 @@ class OrderItem extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           Row(
             children: [
-
               const PhosphorIcon(
-
                 PhosphorIconsDuotone.package,
                 color: Colors.white,
                 size: 30,
               ),
-
               const SizedBox(width: 10),
-
               Expanded(
                 child: Text(
-                  order['antar'] ?? 'Alamat tidak tersedia',
+                  'Antar: ${order['lokasi_tujuan']}',
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -130,9 +150,9 @@ class OrderItem extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           Text(
-            'Tarif: ${order['tarif'] ?? 'Tidak tersedia'}',
+            'Tarif: ${order['harga']}',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -158,9 +178,7 @@ class OrderItem extends StatelessWidget {
                   ),
                   child: const Text(
                     'Tolak',
-
                     style: TextStyle(fontWeight: FontWeight.bold),
-
                   ),
                 ),
               ),
@@ -182,9 +200,7 @@ class OrderItem extends StatelessWidget {
                   ),
                   child: const Text(
                     'Terima',
-
                     style: TextStyle(fontWeight: FontWeight.bold),
-
                   ),
                 ),
               ),
