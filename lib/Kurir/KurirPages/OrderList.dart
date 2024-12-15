@@ -24,6 +24,7 @@ class OrderListPage extends StatelessWidget {
       'jarak': '20 km',
     },
 
+
   ];
 
   @override
@@ -71,12 +72,16 @@ class OrderItem extends StatelessWidget {
         children: [
           Row(
             children: [
-              PhosphorIcon(
+
+              const PhosphorIcon(
+
                 PhosphorIconsDuotone.truck,
                 color: Colors.white,
                 size: 30,
               ),
-              const SizedBox(width: 10), 
+
+              const SizedBox(width: 10),
+
               Expanded(
                 child: Text(
                   order['jemput'] ?? 'Alamat tidak tersedia',
@@ -87,7 +92,9 @@ class OrderItem extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 10), 
+
+              const SizedBox(width: 10),
+
               Text(
                 order['jarak'] ?? '',
                 style: const TextStyle(
@@ -101,12 +108,16 @@ class OrderItem extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: [
-              PhosphorIcon(
+
+              const PhosphorIcon(
+
                 PhosphorIconsDuotone.package,
                 color: Colors.white,
                 size: 30,
               ),
-              const SizedBox(width: 10), 
+
+              const SizedBox(width: 10),
+
               Expanded(
                 child: Text(
                   order['antar'] ?? 'Alamat tidak tersedia',
@@ -147,9 +158,9 @@ class OrderItem extends StatelessWidget {
                   ),
                   child: const Text(
                     'Tolak',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold
-                    ),
+
+                    style: TextStyle(fontWeight: FontWeight.bold),
+
                   ),
                 ),
               ),
@@ -171,9 +182,9 @@ class OrderItem extends StatelessWidget {
                   ),
                   child: const Text(
                     'Terima',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold
-                    ),
+
+                    style: TextStyle(fontWeight: FontWeight.bold),
+
                   ),
                 ),
               ),

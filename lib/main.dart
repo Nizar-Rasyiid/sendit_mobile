@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:sendit/Kurir/KurirPages/HistoryKurir.dart';
-import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
-import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
+import 'package:sendit/FAQ/faqPage.dart';
 
 import 'package:sendit/home/ProfilePage.dart';
 import 'package:sendit/home/WelcomeScreen.dart';
@@ -12,13 +10,12 @@ import 'package:sendit/home/historyPage.dart';
 import 'package:sendit/local_notifications.dart';
 import 'package:sendit/order/orderInformationPage.dart';
 import 'package:sendit/order/orderPage.dart';
-
 import 'package:sendit/order/order_chat.dart';
-
 import 'auth/login.dart';
 import 'auth/register.dart';
 import 'Kurir/Auth/LoginKurir.dart';
 import 'order/orderPage.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,13 +47,13 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      home: HomePage(),
-
+      home: const WelcomeScreen(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
-
-        '/loginKurir': (context) => const LoginKurir(),
+        '/main': (context) => const MainScreen(),
+        '/OrderPage': (context) => const OrderPage(),
+        '/FAQPage': (context) => FAQPage(),
 
       },
     );

@@ -3,7 +3,9 @@ import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
 import 'BottomNavigation.dart';
 
 class HistoryKurir extends StatefulWidget {
-  const HistoryKurir({Key? key}) : super(key: key);
+
+  const HistoryKurir({super.key});
+
 
   @override
   _HistoryKurirState createState() => _HistoryKurirState();
@@ -90,10 +92,12 @@ class _HistoryKurirState extends State<HistoryKurir> {
                         .transparent, // White background for the profile circle
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Row(
+
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Text(
+                      Text(
+
                         'Muhammad',
                         style: TextStyle(
                             fontSize: 14,
@@ -101,8 +105,10 @@ class _HistoryKurirState extends State<HistoryKurir> {
                             color: Colors.white // Purple color for the text
                             ),
                       ),
-                      const SizedBox(width: 4),
-                      const CircleAvatar(
+
+                      SizedBox(width: 4),
+                      CircleAvatar(
+
                         radius: 12,
                         backgroundColor:
                             Colors.white, // Purple background for the initial
@@ -123,7 +129,9 @@ class _HistoryKurirState extends State<HistoryKurir> {
             ],
           ),
         ),
-        actions: [
+
+        actions: const [
+
           // TextButton(
           //   onPressed: () {
           //     // Handle profile editing

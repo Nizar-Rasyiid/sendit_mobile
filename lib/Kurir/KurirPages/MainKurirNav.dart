@@ -5,7 +5,9 @@ import 'HistoryKurir.dart';
 import 'ProfileKurir.dart'; // You'll need to create this file
 
 class MainKurirNavigation extends StatefulWidget {
-  const MainKurirNavigation({Key? key}) : super(key: key);
+
+  const MainKurirNavigation({super.key});
+
 
   @override
   _MainKurirNavigationState createState() => _MainKurirNavigationState();
@@ -15,9 +17,11 @@ class _MainKurirNavigationState extends State<MainKurirNavigation> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    HomeKurir(),
-    HistoryKurir(),
-    Profilekurir(), // Create this widget
+
+    const HomeKurir(),
+    const HistoryKurir(),
+    const Profilekurir(), // Create this widget
+
   ];
 
   final List<BottomNavigationBarItem> _navItems = const [

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sendit/Kurir/Auth/RegisterKurir.dart';
-import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
+
 import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
-import 'package:sendit/main.dart';
+
 import 'package:sendit/auth/forgotpw.dart';
 
 class LoginKurir extends StatefulWidget {
@@ -181,14 +181,18 @@ class _LoginKurirState extends State<LoginKurir> {
                 const SizedBox(height: 24),
                 OutlinedButton.icon(
                   onPressed: () {
-                    // Ini gimana implemennya??
+
+                    // Implement Apple ID login
+
                   },
                   icon: const Icon(Icons.apple),
                   label: const Text('Lanjutkan dengan Apple ID'),
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(
-                      color: Colors.indigo,
-                      width: 2,
+
+                      color: Colors.indigo, // Warna border
+                      width: 2, // Ketebalan border
+
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -203,6 +207,9 @@ class _LoginKurirState extends State<LoginKurir> {
                     const Text('Belum memiliki akun?'),
                     TextButton(
                       onPressed: () {
+
+                        // Navigate to registration page
+
                         Navigator.push(
                             context,
                             MaterialPageRoute(

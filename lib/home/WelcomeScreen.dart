@@ -33,7 +33,9 @@ class WelcomeScreen extends StatelessWidget {
                   gradientBegin: Alignment.bottomLeft,
                   gradientEnd: Alignment.topRight,
                 ),
-                waveAmplitude: 30,
+
+                waveAmplitude: 10,
+
                 size: const Size(
                     double.infinity, 1000), // Ukuran tinggi gelombang
               ),
@@ -42,14 +44,16 @@ class WelcomeScreen extends StatelessWidget {
 
           // Konten utama
           SafeArea(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
-              child: Column(
-                children: [
-                  // Logo dan welcome text section
-                  Expanded(
-                    child: Column(
+
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0, vertical: 20.0),
+                child: Column(
+                  children: [
+                    // Logo dan welcome text section
+                    Column(
+
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Logo
@@ -57,7 +61,6 @@ class WelcomeScreen extends StatelessWidget {
                           width: 250,
                           height: 200,
                           decoration: BoxDecoration(
-                            // color: Color(0xFF5C3BFF),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Image.asset('assets/dasLogo.png'),
@@ -150,8 +153,8 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),  
               ),
             ),
           ),

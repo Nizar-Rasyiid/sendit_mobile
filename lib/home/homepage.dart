@@ -61,6 +61,9 @@ class _HomePageState extends State<HomePage> {
 
 AppBar _buildAppBar() {
   return AppBar(
+
+    automaticallyImplyLeading: false,
+
     backgroundColor: const Color(0xFF4834DF),
     elevation: 0,
     title: const Text(

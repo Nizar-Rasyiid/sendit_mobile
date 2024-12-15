@@ -1,8 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/home/review.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key});
+
+  Future<List<dynamic>> fetchOrdersByUserId(int userId) async {
+    final response = await http
+        .get(Uri.parse('http://192.168.1.17:8000/api/pemesanan/$userId'));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load orders');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,77 +42,48 @@ class HistoryPage extends StatelessWidget {
             ),
           ],
         ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              backgroundImage: AssetImage('assets/profile_image.png'),
-              radius: 16,
-            ),
-          ),
-        ],
+
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Work History',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView(
+      body: FutureBuilder<List<dynamic>>(
+        future: fetchOrdersByUserId(1), // Mengambil data untuk id_user = 1
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No history found'));
+          } else {
+            return ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                InkWell(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final order = snapshot.data![index];
+                return InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ReviewPage(),
-                      ),
-                    );
+                    // Tambahkan navigasi jika diperlukan
                   },
                   child: _buildHistoryItem(
-                    'J. Internasional I, Tanean Sumber...',
-                    'Rp15.000',
+                    order['lokasi_jemput'] ?? 'Unknown Location',
+                    '${order['jarak']} Km',
                     Icons.local_shipping,
                   ),
-                ),
-                const SizedBox(height: 12),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ReviewPage(),
-                      ),
-                    );
-                  },
-                  child: _buildHistoryItem(
-                    'Jl. Untung Suropati No. 32',
-                    'Rp10.100',
-                    Icons.local_shipping,
-                  ),
-                ),
-                // Add more history items as needed
-              ],
-            ),
-          ),
-        ],
+                );
+              },
+            );
+          }
+        },
+
       ),
     );
   }
 
-  Widget _buildHistoryItem(String address, String price, IconData icon) {
+  Widget _buildHistoryItem(String address, String distance, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(16),
+
+      margin: const EdgeInsets.only(bottom: 12),
+
       decoration: BoxDecoration(
         color: const Color(0xFF6C63FF),
         borderRadius: BorderRadius.circular(12),
@@ -129,7 +114,9 @@ class HistoryPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  price,
+
+                  distance,
+
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
