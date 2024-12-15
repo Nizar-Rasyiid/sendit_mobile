@@ -20,7 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> fetchUserData() async {
-    final url = Uri.parse('http://192.168.1.17:8000/api/user/1');
+    final url = Uri.parse('http://192.168.1.5:8000/api/user/1');
     try {
       print('Fetching from URL: $url');
       final response = await http.get(url);

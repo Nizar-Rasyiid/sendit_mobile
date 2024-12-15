@@ -17,7 +17,7 @@ class _MainKurirNavigationState extends State<MainKurirNavigation> {
   final List<Widget> _pages = [
     const HomeKurir(),
     const HistoryKurir(),
-    const Profilekurir(), // Create this widget
+    const ProfileKurir(), // Create this widget
   ];
 
   final List<BottomNavigationBarItem> _navItems = const [

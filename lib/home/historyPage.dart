@@ -7,7 +7,7 @@ class HistoryPage extends StatelessWidget {
 
   Future<List<dynamic>> fetchOrdersByUserId(int userId) async {
     final response = await http
-        .get(Uri.parse('http://192.168.1.17:8000/api/pemesanan/$userId'));
+        .get(Uri.parse('http://192.168.1.5:8000/api/pemesanan/$userId'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);

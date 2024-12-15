@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'orderInformationPage.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
+// ORDER PAGE
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
 
@@ -9,27 +12,90 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
-  String selectedWeight = 'Kecil (Maks 5kg)'; // Default pilihan berat
-  double totalDistance = 10.0; // Contoh jarak pengiriman
-  double price = 0.0; // Harga berdasarkan jarak dan berat
+  String selectedWeight = 'Kecil (Maks 5kg)';
+  double totalDistance = 10.0;
+  double price = 0.0;
+  final int id_user = 1; // Sesuaikan dengan user yang sedang login
+  final int id_kurir = 3; // Contoh id kurir
 
-  // Controllers for address inputs
   final TextEditingController senderAddressController = TextEditingController();
-  final TextEditingController receiverAddressController =
-      TextEditingController();
+  final TextEditingController receiverAddressController = TextEditingController();
 
-  // Error messages
   String? senderAddressError;
   String? receiverAddressError;
 
   @override
   void initState() {
     super.initState();
-    _calculatePrice(); // Hitung harga saat inisialisasi
+    _calculatePrice();
+  }
+
+  Future<void> submitOrder() async {
+    final url = Uri.parse('http://192.168.1.5:8000/api/pemesanan');
+    
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'id_user': id_user,
+          'id_kurir': id_kurir,
+          'jarak': totalDistance,
+          'lokasi_jemput': senderAddressController.text,
+          'lokasi_tujuan': receiverAddressController.text,
+          'status': 'On Progress',
+          'nama_penerima': 'Tes A',
+        }),
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        final orderData = json.decode(response.body);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OrderInformationPage(orderId: orderData['id_pemesanan']),
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text('Failed to create order: ${response.statusCode}'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error detail: $e');
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Failed to connect to server: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   void _calculatePrice() {
-    double pricePerKm = 3000; // Misalnya 5000 per kilometer
+    double pricePerKm = 3000;
     double weightFactor;
 
     if (selectedWeight == 'Kecil (Maks 5kg)') {
@@ -45,15 +111,12 @@ class _OrderPageState extends State<OrderPage> {
     });
   }
 
-  // Validate form inputs
   bool _validateInputs() {
     setState(() {
-      senderAddressError = senderAddressController.text.isEmpty
-          ? 'Alamat pengirim harus diisi.'
-          : null;
-      receiverAddressError = receiverAddressController.text.isEmpty
-          ? 'Alamat penerima harus diisi.'
-          : null;
+      senderAddressError =
+          senderAddressController.text.isEmpty ? 'Alamat pengirim harus diisi.' : null;
+      receiverAddressError =
+          receiverAddressController.text.isEmpty ? 'Alamat penerima harus diisi.' : null;
     });
 
     return senderAddressError == null && receiverAddressError == null;
@@ -69,7 +132,7 @@ class _OrderPageState extends State<OrderPage> {
         title: Row(
           children: [
             Image.asset(
-              'assets/sendit.png', // Pastikan untuk menambahkan aset ini
+              'assets/sendit.png',
               height: 24,
               color: Colors.white,
             ),
@@ -78,8 +141,7 @@ class _OrderPageState extends State<OrderPage> {
         ),
         actions: const [
           CircleAvatar(
-            backgroundImage: AssetImage(
-                'assets/profile_picture.png'), // Pastikan aset ini ada
+            backgroundImage: AssetImage('assets/profile_picture.png'),
             radius: 16,
           ),
           SizedBox(width: 16),
@@ -102,7 +164,6 @@ class _OrderPageState extends State<OrderPage> {
               ),
               const SizedBox(height: 16),
 
-              // Input untuk alamat pengirim
               const Text(
                 'Ambil paket di',
                 style: TextStyle(
@@ -115,7 +176,6 @@ class _OrderPageState extends State<OrderPage> {
                   'Masukkan alamat pengirim...', Icons.home),
               const SizedBox(height: 12),
 
-              // Input untuk alamat penerima
               const Text(
                 'Alamat Penerima',
                 style: TextStyle(
@@ -131,21 +191,17 @@ class _OrderPageState extends State<OrderPage> {
                   Icons.search),
 
               const SizedBox(height: 12),
-              _buildDistanceInfo(), // Informasi jarak pengiriman
+              _buildDistanceInfo(),
 
               const SizedBox(height: 24),
-
-              // Pilihan untuk berat paket dengan tampilan box yang lebih rapi
               const Text(
                 'Pilih Berat Paket',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              _buildWeightSelectionBox(), // Box untuk pilihan berat
+              _buildWeightSelectionBox(),
 
               const SizedBox(height: 24),
-
-              // Bagian untuk alamat yang disimpan
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -158,7 +214,6 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Handle view all saved addresses
                       print("View All clicked");
                     },
                     child: const Text('View All'),
@@ -171,20 +226,14 @@ class _OrderPageState extends State<OrderPage> {
               _buildSavedAddress('Rumah Mama', 'Jl. Bunga Matahari No. 3'),
               const SizedBox(height: 24),
 
-              // Tambahkan harga di bawah Saved Addresses
               _buildPriceInfo(),
 
               const SizedBox(height: 24),
 
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_validateInputs()) {
-                    // Navigate to the recipient information page if validation is successful
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const OrderInformationPage()),
-                    );
+                    await submitOrder();
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -230,7 +279,6 @@ class _OrderPageState extends State<OrderPage> {
                     hintStyle: const TextStyle(color: Colors.grey),
                   ),
                   onSubmitted: (value) {
-                    // You can handle search functionality here
                     print("Search for: $value");
                   },
                 ),
@@ -238,7 +286,7 @@ class _OrderPageState extends State<OrderPage> {
             ],
           ),
         ),
-        if (errorText != null) // Display error message below the input box
+        if (errorText != null)
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
@@ -250,7 +298,6 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  // Informasi Jarak Pengiriman
   Widget _buildDistanceInfo() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -264,7 +311,6 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  // Widget untuk box pilihan berat
   Widget _buildWeightSelectionBox() {
     return GestureDetector(
       onTap: () {
@@ -287,12 +333,11 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  // Dialog Pilihan Berat Paket
   Future<void> _showWeightSelectionDialog() async {
     String? selected = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        String tempWeight = selectedWeight; // Store temporary selection
+        String tempWeight = selectedWeight;
         return AlertDialog(
           title: const Text('Pilih Berat Paket'),
           content: Column(
@@ -345,10 +390,12 @@ class _OrderPageState extends State<OrderPage> {
       },
     );
 
-    setState(() {
-      // selectedWeight = selected!;
-      _calculatePrice();
-    });
+    if (selected != null) {
+      setState(() {
+        selectedWeight = selected;
+        _calculatePrice();
+      });
+    }
   }
 
   Widget _buildPriceInfo() {
@@ -359,8 +406,10 @@ class _OrderPageState extends State<OrderPage> {
           'Total Harga Pengiriman',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
-        Text('Rp ${price.toStringAsFixed(0)}',
-            style: const TextStyle(fontSize: 18, color: Colors.green)),
+        Text(
+          'Rp ${price.toStringAsFixed(0)}',
+          style: const TextStyle(fontSize: 18, color: Colors.green)
+        ),
       ],
     );
   }
@@ -388,6 +437,953 @@ class _OrderPageState extends State<OrderPage> {
                 style: TextStyle(color: Colors.grey[600], fontSize: 12),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ORDER INFORMATION PAGE
+class OrderInformationPage extends StatefulWidget {
+  final int orderId;
+  
+  const OrderInformationPage({
+    Key? key,
+    required this.orderId,
+  }) : super(key: key);
+
+  @override
+  _OrderInformationPageState createState() => _OrderInformationPageState();
+}
+
+class _OrderInformationPageState extends State<OrderInformationPage> {
+  String? selectedPackageType;
+  final TextEditingController senderNameController = TextEditingController();
+  final TextEditingController senderNumberController = TextEditingController();
+  final TextEditingController receiverNameController = TextEditingController();
+  final TextEditingController receiverNumberController = TextEditingController();
+  final TextEditingController otherPackageController = TextEditingController();
+
+  String? senderNameError;
+  String? senderNumberError;
+  String? receiverNameError;
+  String? receiverNumberError;
+  String? packageTypeError;
+  String? otherPackageError;
+
+  Future<void> updateOrderWithReceiverInfo() async {
+    final url = Uri.parse('http://192.168.1.5:8000/api/pemesanan/${widget.orderId}');
+    
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'nama_penerima': receiverNameController.text,
+          'no_hp_penerima': receiverNumberController.text,
+          'jenis_paket': selectedPackageType ?? '',
+          'keterangan': otherPackageController.text,
+          'nama_pengirim': senderNameController.text,
+          'no_hp_pengirim': senderNumberController.text,
+        }),
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const PaymentPage()),
+        );
+      } else {
+        throw Exception('Failed to update order: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error updating order: $e');
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Failed to update order: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF6C63FF),
+        elevation: 0,
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/sendit.png',
+              height: 24,
+              color: Colors.white,
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
+        actions: const [
+          CircleAvatar(
+            backgroundImage: AssetImage('assets/profile_picture.png'),
+            radius: 16,
+          ),
+          SizedBox(width: 16),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              'Informasi Pengirim',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24),
+            _buildInputField('Nama Pengirim', senderNameController, senderNameError),
+            const SizedBox(height: 16),
+            _buildNumberInputField('Nomor Pengirim', senderNumberController, senderNumberError),
+            const SizedBox(height: 24),
+
+            const Text(
+              'Informasi Penerima',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24),
+            _buildInputField('Nama Penerima', receiverNameController, receiverNameError),
+            const SizedBox(height: 16),
+            _buildNumberInputField('Nomor Penerima', receiverNumberController, receiverNumberError),
+            const SizedBox(height: 24),
+
+            const Text(
+              'Detail Paket',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildPackageTypeButtons(() {
+              if (selectedPackageType == null) {
+                setState(() {
+                  packageTypeError = 'Silakan pilih jenis paket.';
+                });
+              } else {
+                setState(() {
+                  packageTypeError = null;
+                });
+              }
+            }),
+            const SizedBox(height: 16),
+            if (packageTypeError != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                packageTypeError!,
+                style: const TextStyle(color: Colors.red, fontSize: 14),
+              ),
+            ],
+            if (selectedPackageType == 'Lainnya') ...[
+              _buildInputField('Jenis Paket Lainnya', otherPackageController, otherPackageError),
+            ],
+            const SizedBox(height: 24),
+
+            ElevatedButton(
+              onPressed: () {
+                if (_validateInput()) {
+                  updateOrderWithReceiverInfo();
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6C63FF),
+                minimumSize: const Size(double.infinity, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+              ),
+              child: const Text(
+                'Lanjutkan',
+                style: TextStyle(fontSize: 16, color: Colors.white)
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInputField(String label, TextEditingController controller, String? error) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+                color: error != null ? Colors.red : Colors.transparent,
+                width: 1.5),
+          ),
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              labelText: label,
+              border: InputBorder.none,
+              hintStyle: const TextStyle(color: Colors.grey),
+            ),
+          ),
+        ),
+        if (error != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            error,
+            style: const TextStyle(color: Colors.red, fontSize: 14),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildNumberInputField(String label, TextEditingController controller, String? error) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+                color: error != null ? Colors.red : Colors.transparent,
+                width: 1.5),
+          ),
+          child: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(13),
+            ],
+            decoration: InputDecoration(
+              labelText: label,
+              border: InputBorder.none,
+              hintStyle: const TextStyle(color: Colors.grey),
+            ),
+          ),
+        ),
+        if (error != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            error,
+            style: const TextStyle(color: Colors.red, fontSize: 14),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildPackageTypeButtons(Function onPackageSelected) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildPackageButton('Makanan', Icons.fastfood, onPackageSelected),
+        _buildPackageButton('Baju', Icons.checkroom, onPackageSelected),
+        _buildPackageButton('Dokumen', Icons.folder, onPackageSelected),
+        _buildPackageButton('Obat-obatan', Icons.medical_services, onPackageSelected),
+        _buildPackageButton('Buku', Icons.book, onPackageSelected),
+        _buildPackageButton('Lainnya', Icons.add, onPackageSelected),
+      ],
+    );
+  }
+
+  Widget _buildPackageButton(String label, IconData icon, Function onPackageSelected) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedPackageType = label;
+          onPackageSelected();
+        });
+      },
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: selectedPackageType == label
+                  ? const Color(0xFF6C63FF)
+                  : Colors.grey[300],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon,
+                color: selectedPackageType == label ? Colors.white : Colors.black),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+                color: selectedPackageType == label ? Colors.black : Colors.black),
+          ),
+        ],
+      ),
+    );
+  }
+
+  bool _validateInput() {
+    bool isValid = true;
+
+    setState(() {
+      if (senderNameController.text.isEmpty) {
+        senderNameError = 'Nama Pengirim harus diisi';
+        isValid = false;
+      } else {
+        senderNameError = null;
+      }
+
+      if (senderNumberController.text.isEmpty) {
+        senderNumberError = 'Nomor Pengirim harus diisi';
+        isValid = false;
+      } else if (senderNumberController.text.length < 10 || 
+                 senderNumberController.text.length > 13) {
+        senderNumberError = 'Nomor Pengirim harus 10-13 digit';
+        isValid = false;
+      } else {
+        senderNumberError = null;
+      }
+
+      if (receiverNameController.text.isEmpty) {
+        receiverNameError = 'Nama Penerima harus diisi';
+        isValid = false;
+      } else {
+        receiverNameError = null;
+      }
+
+      if (receiverNumberController.text.isEmpty) {
+        receiverNumberError = 'Nomor Penerima harus diisi';
+        isValid = false;
+      } else if (receiverNumberController.text.length < 10 || 
+                 receiverNumberController.text.length > 13) {
+        receiverNumberError = 'Nomor Penerima harus 10-13 digit';
+        isValid = false;
+      } else {
+        receiverNumberError = null;
+      }
+
+      if (selectedPackageType == null) {
+        packageTypeError = 'Pilih jenis paket';
+        isValid = false;
+      } else {
+        packageTypeError = null;
+      }
+
+      if (selectedPackageType == 'Lainnya' && otherPackageController.text.isEmpty) {
+        otherPackageError = 'Isi detail jenis paket';
+        isValid = false;
+      } else {
+        otherPackageError = null;
+      }
+    });
+
+    return isValid;
+  }
+}
+
+// PAYMENT PAGE
+class PaymentPage extends StatelessWidget {
+  const PaymentPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF6C63FF),
+        title: const Text('Pembayaran'),
+        elevation: 0,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              'Pilih Metode Pembayaran',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24),
+            _buildPaymentMethod(
+              'QRIS',
+              'Bayar dengan QRIS',
+              Icons.qr_code,
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const OrderTrackingPage()),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            _buildPaymentMethod(
+              'Cash',
+              'Bayar dengan Tunai',
+              Icons.money,
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const OrderTrackingPage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaymentMethod(String title, String subtitle, IconData icon, VoidCallback onTap) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        leading: Icon(icon, color: const Color(0xFF6C63FF)),
+        title: Text(title),
+        subtitle: Text(subtitle),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+// ORDER TRACKING PAGE
+class OrderTrackingPage extends StatelessWidget {
+  const OrderTrackingPage({super.key});
+
+  void _showCancelConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Pembatalan'),
+          content: const Text('Apakah anda yakin untuk membatalkan pesanan?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Tidak',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Ya',
+                style: TextStyle(
+                  color: Color(0xFF6C63FF),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF6C63FF),
+        title: const Text(
+          'Order Tracking',
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.chat),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatPage()),
+              );
+            },
+            color: Colors.white,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTrackingStatus(),
+              const SizedBox(height: 20),
+              _buildCourierInfo(context),
+              const SizedBox(height: 20),
+              _buildPickupAddress(),
+              const SizedBox(height: 20),
+              _buildDeliveryAddress(),
+              const SizedBox(height: 20),
+              _buildTotalWeight(),
+              const SizedBox(height: 20),
+              _buildPaymentDetails(),
+              const SizedBox(height: 30),
+              _buildDeliveryStatus(),
+              const SizedBox(height: 20),
+              _buildCancelButton(context),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTrackingStatus() {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: Colors.green,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Menjemput paket dalam 1 menit',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          Image.asset(
+            'assets/sendit.png',
+            height: 24,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDeliveryStatus() {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              _buildStatusPoint(true, isActive: true),
+              _buildStatusLine(true),
+              _buildStatusPoint(true, isActive: true),
+              _buildStatusLine(false),
+              _buildStatusPoint(false, isActive: false),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text(
+                'Dijemput',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF6C63FF),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Dikirim',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF6C63FF),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Selesai',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusPoint(bool isCompleted, {required bool isActive}) {
+    return Container(
+      width: 24,
+      height: 24,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: isActive ? const Color(0xFF6C63FF) : Colors.grey.shade300,
+        border: Border.all(
+          color: isActive ? const Color(0xFF6C63FF) : Colors.grey.shade300,
+          width: 2,
+        ),
+      ),
+      child: isCompleted
+          ? const Icon(
+              Icons.check,
+              size: 16,
+              color: Colors.white,
+            )
+          : null,
+    );
+  }
+
+  Widget _buildStatusLine(bool isActive) {
+    return Expanded(
+      child: Container(
+        height: 2,
+        color: isActive ? const Color(0xFF6C63FF) : Colors.grey.shade300,
+      ),
+    );
+  }
+
+  Widget _buildCourierInfo(BuildContext context) {
+    return Row(
+      children: [
+        const CircleAvatar(
+          radius: 30,
+          backgroundImage: AssetImage('assets/darwin.png'),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Muhammad Irawan',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'D 1203 FE',
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    icon: const Icon(Icons.chat, color: Color(0xFF6C63FF)),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChatPage()),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 24),
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    icon: const Icon(Icons.phone, color: Color(0xFF6C63FF)),
+                    onPressed: () {
+                      // Handle phone call action
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPickupAddress() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Pickup Address',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8),
+        Text(
+          'Jl. Surya Sumantri BLOK A Nomor 17, Arab, Cicaheum',
+          style: TextStyle(color: Colors.grey),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDeliveryAddress() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Delivery Address',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8),
+        Text(
+          'Jl. Telekomunikasi. 1, Terusan Buahbatu -\nBojongsong, Telkom University, Sukapura, Kec. Dayeuhkolot, Kabupaten Bandung, Jawa Barat 40257',
+          style: TextStyle(color: Colors.grey),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTotalWeight() {
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Total Weight',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Text('Max. 5kg'),
+      ],
+    );
+  }
+
+  Widget _buildPaymentDetails() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Payment Details',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        _buildPaymentDetailRow('Trip fare', 'Rp28.000'),
+        _buildPaymentDetailRow('Platform fee', 'Rp2.000'),
+        _buildPaymentDetailRow('Extra package protection', 'Rp5.000'),
+        const Divider(),
+        _buildPaymentDetailRow('Total', 'Rp35.000', isTotal: true),
+      ],
+    );
+  }
+
+  Widget _buildPaymentDetailRow(String title, String amount, {bool isTotal = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        Text(
+          amount,
+          style: TextStyle(
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            color: isTotal ? Colors.black : Colors.grey,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCancelButton(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          _showCancelConfirmationDialog(context);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF6C63FF),
+          minimumSize: const Size(double.infinity, 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: const Text(
+          'Batalkan Pesanan',
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
+      ),
+    );
+  }
+}
+
+// CHAT PAGE
+class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
+
+  @override
+  _ChatPageState createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final TextEditingController _messageController = TextEditingController();
+  final List<ChatMessage> _messages = [];
+
+  void _sendMessage() {
+    if (_messageController.text.trim().isNotEmpty) {
+      setState(() {
+        _messages.add(ChatMessage(
+          text: _messageController.text,
+          isUser: true,
+        ));
+        _messageController.clear();
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF6C63FF),
+        title: const Text('Chat dengan Kurir'),
+        elevation: 0,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              reverse: true,
+              padding: const EdgeInsets.all(16),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                return _messages[index];
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, -1),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: const InputDecoration(
+                      hintText: 'Ketik pesan...',
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.send),
+                  onPressed: _sendMessage,
+                  color: const Color(0xFF6C63FF),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ChatMessage extends StatelessWidget {
+  final String text;
+  final bool isUser;
+
+  const ChatMessage({
+    super.key,
+    required this.text,
+    required this.isUser,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment:
+            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+            decoration: BoxDecoration(
+              color: isUser ? const Color(0xFF6C63FF) : Colors.grey[300],
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              text,
+              style: TextStyle(
+                color: isUser ? Colors.white : Colors.black,
+              ),
+            ),
           ),
         ],
       ),
