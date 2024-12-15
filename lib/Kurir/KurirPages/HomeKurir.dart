@@ -6,7 +6,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:sendit/FAQ/faqPage.dart';
 
 class HomeKurir extends StatefulWidget {
-  const HomeKurir({Key? key}) : super(key: key);
+  const HomeKurir({super.key});
 
   @override
   _HomeKurirState createState() => _HomeKurirState();
@@ -39,7 +39,7 @@ class _HomeKurirState extends State<HomeKurir> {
                   ),
                   Row(
                     children: [
-                      const Text(
+                      Text(
                         'Muhammad',
                         style: TextStyle(
                           color: Colors.white,
@@ -198,18 +198,18 @@ class _HomeKurirState extends State<HomeKurir> {
                               padding: const EdgeInsets.all(16),
                               child: Row(
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.help_outline,
                                     color: Color(0xFF6C63FF),
                                     size: 24,
                                   ),
-                                  const SizedBox(width: 12),
+                                  SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
+                                        Text(
                                           'FAQ!',
                                           style: TextStyle(
                                             color: Color(0xFF6C63FF),
@@ -227,7 +227,7 @@ class _HomeKurirState extends State<HomeKurir> {
                                       ],
                                     ),
                                   ),
-                                  const Icon(
+                                  Icon(
                                     Icons.arrow_forward_ios,
                                     color: Color(0xFF6C63FF),
                                     size: 16,

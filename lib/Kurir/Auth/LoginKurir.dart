@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sendit/Kurir/Auth/RegisterKurir.dart';
-import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
 import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
-import 'package:sendit/main.dart';
 import 'package:sendit/auth/forgotpw.dart';
 
 class LoginKurir extends StatefulWidget {
