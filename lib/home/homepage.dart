@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sendit/home/historyPage.dart';
 import 'package:sendit/local_notifications.dart';
-import 'package:sendit/order/orderInformationPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

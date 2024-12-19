@@ -5,7 +5,6 @@ import 'package:sendit/home/WelcomeScreen.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/home/historyPage.dart';
 import 'package:sendit/local_notifications.dart';
-import 'package:sendit/order/orderInformationPage.dart';
 import 'package:sendit/order/orderPage.dart';
 import 'package:sendit/order/order_chat.dart';
 import 'auth/login.dart';

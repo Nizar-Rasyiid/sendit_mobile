@@ -47,6 +47,8 @@ class _OrderPageState extends State<OrderPage> {
           'lokasi_tujuan': receiverAddressController.text,
           'status': 'On Progress',
           'nama_penerima': 'Tes A',
+          'total_harga': price,
+          'metode_pembayaran': 'QRIS'
         }),
       );
 
@@ -58,7 +60,11 @@ class _OrderPageState extends State<OrderPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OrderInformationPage(orderId: orderData['id_pemesanan']),
+            builder: (context) => OrderInformationPage(
+              orderId: orderData['id_pemesanan'],
+              totalPrice: price,
+              selectedWeight: selectedWeight,
+              ),
           ),
         );
       } else {
@@ -447,10 +453,13 @@ class _OrderPageState extends State<OrderPage> {
 // ORDER INFORMATION PAGE
 class OrderInformationPage extends StatefulWidget {
   final int orderId;
-  
+  final double totalPrice;  // Add this field
+  final String selectedWeight;
   const OrderInformationPage({
     Key? key,
     required this.orderId,
+    required this.totalPrice, 
+    required this.selectedWeight, // Add this parameter
   }) : super(key: key);
 
   @override
@@ -464,6 +473,7 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
   final TextEditingController receiverNameController = TextEditingController();
   final TextEditingController receiverNumberController = TextEditingController();
   final TextEditingController otherPackageController = TextEditingController();
+  String selectedPaymentMethod = 'QRIS'; // Default payment method
 
   String? senderNameError;
   String? senderNumberError;
@@ -472,53 +482,61 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
   String? packageTypeError;
   String? otherPackageError;
 
-  Future<void> updateOrderWithReceiverInfo() async {
-    final url = Uri.parse('http://192.168.1.5:8000/api/pemesanan/${widget.orderId}');
-    
-    try {
-      final response = await http.put(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({
-          'nama_penerima': receiverNameController.text,
-          'no_hp_penerima': receiverNumberController.text,
-          'jenis_paket': selectedPackageType ?? '',
-          'keterangan': otherPackageController.text,
-          'nama_pengirim': senderNameController.text,
-          'no_hp_pengirim': senderNumberController.text,
-        }),
-      );
+Future<void> updateOrderWithReceiverInfo(String selectedWeight) async {
+  final url = Uri.parse('http://192.168.1.5:8000/api/pemesanan/${widget.orderId}');
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+  try {
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'nama_penerima': receiverNameController.text,
+        'no_hp_penerima': receiverNumberController.text,
+        'jenis_paket': selectedPackageType ?? '',
+        'keterangan': selectedPackageType == 'Lainnya'
+            ? otherPackageController.text
+            : selectedPackageType ?? '',
+        'nama_pengirim': senderNameController.text,
+        'no_hp_pengirim': senderNumberController.text,
+        'berat_paket': selectedWeight, // Kirim selectedWeight
+        'total_harga': widget.totalPrice,
+        'metode_pembayaran': selectedPaymentMethod,
+      }),
+    );
 
-      if (response.statusCode == 200) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const PaymentPage()),
-        );
-      } else {
-        throw Exception('Failed to update order: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error updating order: $e');
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Error'),
-          content: Text('Failed to update order: $e'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
+    if (response.statusCode == 200) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaymentPage(
+            orderId: widget.orderId,
+            selectedWeight: selectedWeight, // Teruskan ke PaymentPage
+          ),
         ),
       );
+    } else {
+      throw Exception('Failed to update order: ${response.statusCode}');
     }
+  } catch (e) {
+    print('Error updating order: $e');
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Error'),
+        content: Text('Failed to update order: $e'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -595,7 +613,6 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
                 });
               }
             }),
-            const SizedBox(height: 16),
             if (packageTypeError != null) ...[
               const SizedBox(height: 4),
               Text(
@@ -604,6 +621,7 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
               ),
             ],
             if (selectedPackageType == 'Lainnya') ...[
+              const SizedBox(height: 16),
               _buildInputField('Jenis Paket Lainnya', otherPackageController, otherPackageError),
             ],
             const SizedBox(height: 24),
@@ -611,7 +629,7 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
             ElevatedButton(
               onPressed: () {
                 if (_validateInput()) {
-                  updateOrderWithReceiverInfo();
+                  updateOrderWithReceiverInfo(widget.selectedWeight);
                 }
               },
               style: ElevatedButton.styleFrom(
@@ -720,39 +738,47 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
   Widget _buildPackageButton(String label, IconData icon, Function onPackageSelected) {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          selectedPackageType = label;
-          onPackageSelected();
-        });
-      },
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: selectedPackageType == label
-                  ? const Color(0xFF6C63FF)
-                  : Colors.grey[300],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon,
-                color: selectedPackageType == label ? Colors.white : Colors.black),
+      setState(() {
+        selectedPackageType = label;
+        // Jika bukan "Lainnya", langsung set keterangan sesuai label
+        if (label != 'Lainnya') {
+          otherPackageController.text = label;
+        } else {
+          // Jika "Lainnya", kosongkan controller untuk diisi manual
+          otherPackageController.clear();
+        }
+        onPackageSelected();
+      });
+    },
+    child: Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: selectedPackageType == label
+                ? const Color(0xFF6C63FF)
+                : Colors.grey[300],
+            borderRadius: BorderRadius.circular(10),
           ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-                color: selectedPackageType == label ? Colors.black : Colors.black),
-          ),
-        ],
-      ),
-    );
-  }
+          child: Icon(icon,
+              color: selectedPackageType == label ? Colors.white : Colors.black),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+              color: selectedPackageType == label ? Colors.black : Colors.black),
+        ),
+      ],
+    ),
+  );
+}
 
-  bool _validateInput() {
+bool _validateInput() {
     bool isValid = true;
 
     setState(() {
+      // Sender validation
       if (senderNameController.text.isEmpty) {
         senderNameError = 'Nama Pengirim harus diisi';
         isValid = false;
@@ -771,6 +797,7 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
         senderNumberError = null;
       }
 
+      // Receiver validation
       if (receiverNameController.text.isEmpty) {
         receiverNameError = 'Nama Penerima harus diisi';
         isValid = false;
@@ -789,28 +816,123 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
         receiverNumberError = null;
       }
 
+      // Package type validation
       if (selectedPackageType == null) {
         packageTypeError = 'Pilih jenis paket';
         isValid = false;
       } else {
         packageTypeError = null;
-      }
-
-      if (selectedPackageType == 'Lainnya' && otherPackageController.text.isEmpty) {
-        otherPackageError = 'Isi detail jenis paket';
-        isValid = false;
-      } else {
-        otherPackageError = null;
+        
+        // Only validate other package input if "Lainnya" is selected
+        if (selectedPackageType == 'Lainnya') {
+          if (otherPackageController.text.isEmpty) {
+            otherPackageError = 'Isi detail jenis paket';
+            isValid = false;
+          } else {
+            otherPackageError = null;
+          }
+        } else {
+          // Clear any existing error for other package when not "Lainnya"
+          otherPackageError = null;
+        }
       }
     });
 
     return isValid;
-  }
+}
 }
 
 // PAYMENT PAGE
-class PaymentPage extends StatelessWidget {
-  const PaymentPage({super.key});
+class PaymentPage extends StatefulWidget {
+  final int orderId;
+  final String selectedWeight;
+
+  const PaymentPage({
+    super.key,
+    required this.orderId,
+    required this.selectedWeight,
+  });
+
+  @override
+  _PaymentPageState createState() => _PaymentPageState();
+}
+
+class _PaymentPageState extends State<PaymentPage> {
+  List<dynamic> paymentMethods = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPaymentMethods();
+  }
+
+  Future<void> fetchPaymentMethods() async {
+    final response = await http.get(Uri.parse('http://192.168.1.5:8000/api/payments/'));
+
+    if (response.statusCode == 200) {
+      setState(() {
+        paymentMethods = json.decode(response.body);
+      });
+    } else {
+      throw Exception('Failed to load payment methods');
+    }
+  }
+
+Future<void> updatePaymentMethod(String method) async {
+  final url = Uri.parse('http://192.168.1.5:8000/api/pemesanan/${widget.orderId}');
+
+  try {
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'metode_pembayaran': method,
+        'berat_paket': widget.selectedWeight, // Gunakan widget.selectedWeight
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(response.body); // Dekode responseBody
+      final pickupAddress = responseBody['lokasi_jemput'] ?? 'Unknown';
+      final deliveryAddress = responseBody['lokasi_tujuan'] ?? 'Unknown';
+      final tripFare = double.tryParse(responseBody['total_harga'].toString()) ?? 0.0;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OrderTrackingPage(
+            pickupAddress: pickupAddress,
+            deliveryAddress: deliveryAddress,
+            totalWeight: widget.selectedWeight, // Kirim widget.selectedWeight
+            tripFare: tripFare,
+            paymentMethod: method,
+          ),
+        ),
+      );
+    } else {
+      throw Exception('Failed to update payment method: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error updating payment method: $e');
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Error'),
+        content: Text('Failed to update payment method: $e'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -822,42 +944,31 @@ class PaymentPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Pilih Metode Pembayaran',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+        child: paymentMethods.isEmpty
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    'Pilih Metode Pembayaran',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  ...paymentMethods.map((method) {
+                    return _buildPaymentMethod(
+                      method['metode_pembayaran'],
+                      'Bayar dengan ${method['metode_pembayaran']}',
+                      Icons.payment,
+                      () async {
+                        await updatePaymentMethod(method['metode_pembayaran']);
+                      },
+                    );
+                  }).toList(),
+                ],
               ),
-            ),
-            const SizedBox(height: 24),
-            _buildPaymentMethod(
-              'QRIS',
-              'Bayar dengan QRIS',
-              Icons.qr_code,
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const OrderTrackingPage()),
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-            _buildPaymentMethod(
-              'Cash',
-              'Bayar dengan Tunai',
-              Icons.money,
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const OrderTrackingPage()),
-                );
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -865,6 +976,7 @@ class PaymentPage extends StatelessWidget {
   Widget _buildPaymentMethod(String title, String subtitle, IconData icon, VoidCallback onTap) {
     return Card(
       elevation: 2,
+      margin: const EdgeInsets.only(bottom: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -881,50 +993,27 @@ class PaymentPage extends StatelessWidget {
 
 // ORDER TRACKING PAGE
 class OrderTrackingPage extends StatelessWidget {
-  const OrderTrackingPage({super.key});
+  final String pickupAddress;
+  final String deliveryAddress;
+  final String totalWeight; // Sudah menerima totalWeight
+  final double tripFare;
+  final String paymentMethod; 
 
-  void _showCancelConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Konfirmasi Pembatalan'),
-          content: const Text('Apakah anda yakin untuk membatalkan pesanan?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Tidak',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Ya',
-                style: TextStyle(
-                  color: Color(0xFF6C63FF),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        );
-      },
-    );
-  }
+  const OrderTrackingPage({
+    Key? key,
+    required this.pickupAddress,
+    required this.deliveryAddress,
+    required this.totalWeight,
+    required this.tripFare,
+    required this.paymentMethod,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    const double platformFee = 0;
+    const double extraPackageProtection = 0;
+    final double totalCost = tripFare + platformFee + extraPackageProtection;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -956,24 +1045,37 @@ class OrderTrackingPage extends StatelessWidget {
               const SizedBox(height: 20),
               _buildCourierInfo(context),
               const SizedBox(height: 20),
-              _buildPickupAddress(),
+              _buildAddressSection('Pickup Address', pickupAddress),
               const SizedBox(height: 20),
-              _buildDeliveryAddress(),
+              _buildAddressSection('Delivery Address', deliveryAddress),
               const SizedBox(height: 20),
-              _buildTotalWeight(),
+              _buildWeightSection(totalWeight), // Tampilkan totalWeight
               const SizedBox(height: 20),
-              _buildPaymentDetails(),
+              _buildPaymentDetails(tripFare, platformFee, extraPackageProtection, totalCost, paymentMethod),
               const SizedBox(height: 30),
               _buildDeliveryStatus(),
               const SizedBox(height: 20),
               _buildCancelButton(context),
-              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
     );
   }
+
+  Widget _buildWeightSection(String weight) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Total Weight',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Text(weight), // Menampilkan berat yang diterima dari navigasi
+      ],
+    );
+  }
+}
 
   Widget _buildTrackingStatus() {
     return Container(
@@ -1019,6 +1121,191 @@ class OrderTrackingPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCourierInfo(BuildContext context) {
+    return Row(
+      children: [
+        const CircleAvatar(
+          radius: 30,
+          backgroundImage: AssetImage('assets/darwin.png'),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Muhammad Irawan',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'D 1203 FE',
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    icon: const Icon(Icons.chat, color: Color(0xFF6C63FF)),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChatPage()),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 24),
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    icon: const Icon(Icons.phone, color: Color(0xFF6C63FF)),
+                    onPressed: () {
+                      // Handle phone call action
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAddressSection(String title, String address) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          address,
+          style: const TextStyle(color: Colors.grey),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWeightSection(String weight) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Total Weight',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Text(weight),
+      ],
+    );
+  }
+
+Widget _buildPaymentDetails(
+    double tripFare, double platformFee, double extraPackageProtection, double totalCost, String paymentMethod) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        'Payment Details',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 8),
+      _buildPaymentDetailRow('Trip fare', 'Rp ${tripFare.toStringAsFixed(0)}'),
+      _buildPaymentDetailRow('Platform fee', 'Rp ${platformFee.toStringAsFixed(0)}'),
+      _buildPaymentDetailRow('Extra package protection', 'Rp ${extraPackageProtection.toStringAsFixed(0)}'),
+      const Divider(),
+      _buildPaymentDetailRow('Total', 'Rp ${totalCost.toStringAsFixed(0)}', isTotal: true),
+      const SizedBox(height: 8),
+      _buildPaymentDetailRow('Payment Method', paymentMethod), // Tampilkan metode pembayaran
+    ],
+  );
+}
+
+
+  Widget _buildPaymentDetailRow(String title, String amount, {bool isTotal = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        Text(
+          amount,
+          style: TextStyle(
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            color: isTotal ? Colors.black : Colors.grey,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCancelButton(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          _showCancelConfirmationDialog(context);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF6C63FF),
+          minimumSize: const Size(double.infinity, 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: const Text(
+          'Batalkan Pesanan',
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  void _showCancelConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Pembatalan'),
+          content: const Text('Apakah anda yakin untuk membatalkan pesanan?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Tidak',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Ya',
+                style: TextStyle(
+                  color: Color(0xFF6C63FF),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        );
+      },
     );
   }
 
@@ -1113,164 +1400,6 @@ class OrderTrackingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCourierInfo(BuildContext context) {
-    return Row(
-      children: [
-        const CircleAvatar(
-          radius: 30,
-          backgroundImage: AssetImage('assets/darwin.png'),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Muhammad Irawan',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                'D 1203 FE',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    icon: const Icon(Icons.chat, color: Color(0xFF6C63FF)),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ChatPage()),
-                      );
-                    },
-                  ),
-                  const SizedBox(width: 24),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    icon: const Icon(Icons.phone, color: Color(0xFF6C63FF)),
-                    onPressed: () {
-                      // Handle phone call action
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPickupAddress() {
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Pickup Address',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 8),
-        Text(
-          'Jl. Surya Sumantri BLOK A Nomor 17, Arab, Cicaheum',
-          style: TextStyle(color: Colors.grey),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDeliveryAddress() {
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Delivery Address',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 8),
-        Text(
-          'Jl. Telekomunikasi. 1, Terusan Buahbatu -\nBojongsong, Telkom University, Sukapura, Kec. Dayeuhkolot, Kabupaten Bandung, Jawa Barat 40257',
-          style: TextStyle(color: Colors.grey),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTotalWeight() {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'Total Weight',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Text('Max. 5kg'),
-      ],
-    );
-  }
-
-  Widget _buildPaymentDetails() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Payment Details',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        _buildPaymentDetailRow('Trip fare', 'Rp28.000'),
-        _buildPaymentDetailRow('Platform fee', 'Rp2.000'),
-        _buildPaymentDetailRow('Extra package protection', 'Rp5.000'),
-        const Divider(),
-        _buildPaymentDetailRow('Total', 'Rp35.000', isTotal: true),
-      ],
-    );
-  }
-
-  Widget _buildPaymentDetailRow(String title, String amount, {bool isTotal = false}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-        Text(
-          amount,
-          style: TextStyle(
-            fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-            color: isTotal ? Colors.black : Colors.grey,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCancelButton(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {
-          _showCancelConfirmationDialog(context);
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF6C63FF),
-          minimumSize: const Size(double.infinity, 50),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        child: const Text(
-          'Batalkan Pesanan',
-          style: TextStyle(fontSize: 16, color: Colors.white),
-        ),
-      ),
-    );
-  }
-}
 
 // CHAT PAGE
 class ChatPage extends StatefulWidget {
