@@ -32,7 +32,7 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Future<void> submitOrder() async {
-    final url = Uri.parse('http://192.168.1.5:8000/api/pemesanan');
+    final url = Uri.parse('http://192.168.1.6:8000/api/pemesanan');
     
     try {
       final response = await http.post(
@@ -484,7 +484,7 @@ class _OrderInformationPageState extends State<OrderInformationPage> {
   String? otherPackageError;
 
 Future<void> updateOrderWithReceiverInfo(String selectedWeight) async {
-  final url = Uri.parse('http://192.168.1.5:8000/api/pemesanan/${widget.orderId}');
+  final url = Uri.parse('http://192.168.1.6:8000/api/pemesanan/${widget.orderId}');
 
   try {
     final response = await http.put(
@@ -868,7 +868,7 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Future<void> fetchPaymentMethods() async {
-    final response = await http.get(Uri.parse('http://192.168.1.5:8000/api/payments/'));
+    final response = await http.get(Uri.parse('http://192.168.1.6:8000/api/payments/'));
 
     if (response.statusCode == 200) {
       setState(() {
@@ -880,7 +880,7 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
 Future<void> updatePaymentMethod(String method) async {
-  final url = Uri.parse('http://192.168.1.5:8000/api/pemesanan/${widget.orderId}');
+  final url = Uri.parse('http://192.168.1.6:8000/api/pemesanan/${widget.orderId}');
 
   try {
     final response = await http.put(

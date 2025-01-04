@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
 import 'BottomNavigation.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HistoryKurir extends StatefulWidget {
   const HistoryKurir({super.key});
@@ -11,6 +13,8 @@ class HistoryKurir extends StatefulWidget {
 
 class _HistoryKurirState extends State<HistoryKurir> {
   int _currentIndex = 1;
+  List<Map<String, dynamic>> _workHistory = [];
+  bool isLoading = true;
 
   final List<BottomNavigationBarItem> _navItems = const [
     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
@@ -18,52 +22,72 @@ class _HistoryKurirState extends State<HistoryKurir> {
     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    fetchHistory();
+  }
+
+  Future<void> fetchHistory() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://192.168.1.6:8000/api/pemesanan'),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          _workHistory = data.map((item) {
+            return {
+              'location': item['lokasi_tujuan'] ?? 'Lokasi tidak tersedia',
+              'status': item['status'] ?? 'Status tidak tersedia',
+              'date': _formatDate(item['created_at'] ?? ''),
+              'price': 'Rp ${item['total_harga'] ?? '0'}',
+            };
+          }).toList();
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load history');
+      }
+    } catch (e) {
+      print('Error fetching history: $e');
+      setState(() {
+        isLoading = false;
+      });
+      
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text('Failed to load history: $e'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+  String _formatDate(String dateString) {
+    try {
+      final DateTime date = DateTime.parse(dateString);
+      return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+    } catch (e) {
+      return 'Invalid date';
+    }
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
-
-  final List<Map<String, String>> _workHistory = [
-    {
-      'location': 'J.l Telakuning 1, Tanjung Buah Hulu, Teluk Nibung',
-      'status': 'Delivered',
-      'date': '04/10/2023',
-      'price': 'Rp 60.000',
-    },
-    {
-      'location': 'J.l Merdeka 10, Kebon Jeruk, Jakarta Barat',
-      'status': 'Pending',
-      'date': '05/10/2023',
-      'price': 'Rp 45.000',
-    },
-    {
-      'location': 'J.l Sudirman 15, Karet Tengsin, Jakarta Pusat',
-      'status': 'Delivered',
-      'date': '05/10/2023',
-      'price': 'Rp 55.000',
-    },
-    {
-      'location': 'J.l Gatot Subroto 20, Semanggi, Jakarta Selatan',
-      'status': 'Cancelled',
-      'date': '05/10/2023',
-      'price': 'Rp 0',
-    },
-    {
-      'location': 'J.l Thamrin 25, Menteng, Jakarta Pusat',
-      'status': 'Delivered',
-      'date': '06/10/2023',
-      'price': 'Rp 75.000',
-    },
-    {
-      'location': 'J.l MH Thamrin 30, Gondangdia, Jakarta Pusat',
-      'status': 'Pending',
-      'date': '06/10/2023',
-      'price': 'Rp 65.000',
-    },
-
-    // Add more entries as needed
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +100,7 @@ class _HistoryKurirState extends State<HistoryKurir> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Image.asset(
-                'assets/sendit.png', // Make sure to add this asset
+                'assets/sendit.png',
                 height: 24,
                 color: Colors.white,
               ),
@@ -86,8 +110,7 @@ class _HistoryKurirState extends State<HistoryKurir> {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: Colors
-                        .transparent, // White background for the profile circle
+                    color: Colors.transparent,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: const Row(
@@ -98,19 +121,17 @@ class _HistoryKurirState extends State<HistoryKurir> {
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: Colors.white // Purple color for the text
-                            ),
+                            color: Colors.white
+                        ),
                       ),
                       SizedBox(width: 4),
                       CircleAvatar(
                         radius: 12,
-                        backgroundColor:
-                            Colors.white, // Purple background for the initial
+                        backgroundColor: Colors.white,
                         child: Text(
                           'M',
                           style: TextStyle(
-                            color: Color(
-                                0xFF6C63FF), // White color for the initial
+                            color: Color(0xFF6C63FF),
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
                           ),
@@ -123,17 +144,6 @@ class _HistoryKurirState extends State<HistoryKurir> {
             ],
           ),
         ),
-        actions: const [
-          // TextButton(
-          //   onPressed: () {
-          //     // Handle profile editing
-          //   },
-          //   child: const Text(
-          //     'Profile',
-          //     style: TextStyle(color: Colors.white),
-          //   ),
-          // ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -146,69 +156,76 @@ class _HistoryKurirState extends State<HistoryKurir> {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // Purple color for the text
+                color: Colors.black,
               ),
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: ListView.separated(
-                itemCount: _workHistory.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final item = _workHistory[index];
-                  return Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF6C63FF),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item['location']!,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          item['status']!,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          item['date']!,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              item['price']!,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
+              child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _workHistory.isEmpty
+                  ? const Center(child: Text('Tidak ada riwayat pengiriman'))
+                  : RefreshIndicator(
+                      onRefresh: fetchHistory,
+                      child: ListView.separated(
+                        itemCount: _workHistory.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final item = _workHistory[index];
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF6C63FF),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          ],
-                        ),
-                      ],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item['location']!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  item['status']!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  item['date']!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      item['price']!,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),

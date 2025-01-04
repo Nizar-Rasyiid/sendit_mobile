@@ -19,23 +19,86 @@ class _ProfileKurirState extends State<ProfileKurir> {
     fetchUserData();
   }
 
-  Future<void> fetchUserData() async {
-    final url = Uri.parse('http://192.168.1.17:8000/api/user/3');
+Future<void> fetchUserData() async {
+    final url = Uri.parse('http://192.168.1.6:8000/api/user/3');
     try {
-      final response = await http.get(url);
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      // Tambahkan logging untuk debug
+      print('Status Code: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
+        final decodedData = json.decode(response.body);
+        print('Decoded data: $decodedData');
+        
         setState(() {
-          userData = json.decode(response.body);
+          // Jika response berupa array, ambil data pertama
+          userData = decodedData is List ? decodedData[0] : decodedData;
           isLoading = false;
         });
+      } else if (response.statusCode == 404) {
+        throw Exception('User not found');
       } else {
         throw Exception('Failed to load user data: ${response.statusCode}');
       }
     } catch (e) {
+      print('Error detail: $e');
       setState(() {
         isLoading = false;
+        userData = null;
       });
+
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text('Failed to load user data: $e\n\nPlease check your API connection and try again.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+  // Fungsi untuk handle edit profile
+  void _handleEditProfile() {
+    // Implementasi edit profile
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Profile'),
+        content: const Text('Feature coming soon!'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDate(String dateStr) {
+    if (dateStr.isEmpty) return 'N/A';
+    try {
+      final date = DateTime.parse(dateStr);
+      // Format tanggal dengan leading zero
+      return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+    } catch (e) {
+      return 'N/A';
     }
   }
 
@@ -68,56 +131,59 @@ class _ProfileKurirState extends State<ProfileKurir> {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit, color: Colors.white),
-            onPressed: () {
-              // Implementasi edit profile
-            },
+            onPressed: _handleEditProfile,
           ),
         ],
       ),
-      body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6C63FF)),
-              ),
-            )
-          : userData == null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.error_outline,
-                        size: 60,
-                        color: Colors.red,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Failed to load user data',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey[800],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      ElevatedButton(
-                        onPressed: fetchUserData,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF6C63FF),
-                        ),
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                )
-              : SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildProfileHeader(),
-                      const SizedBox(height: 20),
-                      _buildInfoSection(),
-                    ],
-                  ),
+      body: RefreshIndicator(
+        onRefresh: fetchUserData,
+        child: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6C63FF)),
                 ),
+              )
+            : userData == null
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.error_outline,
+                          size: 60,
+                          color: Colors.red,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Failed to load user data',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton(
+                          onPressed: fetchUserData,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF6C63FF),
+                          ),
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  )
+                : SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        _buildProfileHeader(),
+                        const SizedBox(height: 20),
+                        _buildInfoSection(),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+      ),
     );
   }
 
@@ -328,15 +394,5 @@ class _ProfileKurirState extends State<ProfileKurir> {
         ],
       ),
     );
-  }
-
-  String _formatDate(String dateStr) {
-    if (dateStr.isEmpty) return 'N/A';
-    try {
-      final date = DateTime.parse(dateStr);
-      return '${date.day}/${date.month}/${date.year}';
-    } catch (e) {
-      return 'N/A';
-    }
   }
 }

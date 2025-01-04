@@ -1,29 +1,89 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class OrderListPage extends StatelessWidget {
-  OrderListPage({super.key});
+class OrderListPage extends StatefulWidget {
+  const OrderListPage({super.key});
 
-  final List<Map<String, String>> orders = [
-    {
-      'jemput': 'Jl. Telekomunikasi 1',
-      'antar': 'Jl. BuahBakar',
-      'tarif': 'Rp.35.000',
-      'jarak': '10 km',
-    },
-    {
-      'jemput': 'Jl. Contoh Alamat No. 3',
-      'antar': 'Jl. Contoh Alamat No. 4',
-      'tarif': 'Rp.150.000',
-      'jarak': '15 km',
-    },
-    {
-      'jemput': 'Jl. Contoh Alamat No. 5 nwadnwndanndwndawndwa',
-      'antar': 'Jl. Contoh Alamat No. 6',
-      'tarif': 'Rp.200.000',
-      'jarak': '20 km',
-    },
-  ];
+  @override
+  _OrderListPageState createState() => _OrderListPageState();
+}
+
+class _OrderListPageState extends State<OrderListPage> {
+  List<Map<String, dynamic>> orders = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchOrders();
+  }
+
+  String getWeightCategory(dynamic tarif) {
+    double harga = 0;
+    
+    if (tarif is String) {
+      harga = double.tryParse(tarif.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
+    } else if (tarif is num) {
+      harga = tarif.toDouble();
+    }
+
+    if (harga == 30000) {
+      return 'Kecil (Maks 5kg)';
+    } else if (harga == 45000) {
+      return 'Sedang (Maks 20kg)';
+    } else if (harga == 60000) {
+      return 'Besar (Maks 100kg)';
+    }
+    return 'Tidak diketahui';
+  }
+
+  Future<void> fetchOrders() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://192.168.1.6:8000/api/pemesanan'),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        if (mounted) {
+          setState(() {
+            orders = data.map((item) => {
+              'id': item['id_pemesanan'].toString(),
+              'jemput': item['lokasi_jemput'] ?? 'Alamat tidak tersedia',
+              'antar': item['lokasi_tujuan'] ?? 'Alamat tidak tersedia',
+              'tarif': 'Rp${item['total_harga']}',
+              'jarak': getWeightCategory(item['total_harga']),
+            }).toList();
+            isLoading = false;
+          });
+        }
+      } else {
+        throw Exception('Failed to load orders');
+      }
+    } catch (e) {
+      debugPrint('Error fetching orders: $e');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text('Failed to load orders: $e'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,20 +101,60 @@ class OrderListPage extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      body: ListView.builder(
-        itemCount: orders.length,
-        itemBuilder: (context, index) {
-          return OrderItem(order: orders[index]);
-        },
-      ),
+      body: isLoading 
+        ? const Center(child: CircularProgressIndicator())
+        : orders.isEmpty 
+          ? const Center(child: Text('Tidak ada pesanan'))
+          : RefreshIndicator(
+              onRefresh: fetchOrders,
+              child: ListView.builder(
+                itemCount: orders.length,
+                itemBuilder: (context, index) {
+                  return OrderItem(
+                    order: Map<String, String>.from(orders[index]),
+                    onOrderDeleted: fetchOrders,
+                  );
+                },
+              ),
+            ),
     );
   }
 }
 
 class OrderItem extends StatelessWidget {
   final Map<String, String> order;
+  final VoidCallback? onOrderDeleted;
 
-  const OrderItem({required this.order, super.key});
+  const OrderItem({
+    required this.order,
+    this.onOrderDeleted,
+    super.key,
+  });
+
+  Future<void> deleteOrder(BuildContext context) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('http://192.168.1.6:8000/api/pemesanan/${order['id']}'),
+      );
+
+      if (response.statusCode == 200) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Pesanan berhasil ditolak')),
+          );
+          onOrderDeleted?.call();
+        }
+      } else {
+        throw Exception('Failed to delete order: ${response.statusCode}');
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,29 +170,14 @@ class OrderItem extends StatelessWidget {
         children: [
           Row(
             children: [
-              const PhosphorIcon(
-                PhosphorIconsDuotone.truck,
-                color: Colors.white,
-                size: 30,
-              ),
-              const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  order['jemput'] ?? 'Alamat tidak tersedia',
+                  order['jarak'] ?? '',
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Text(
-                order['jarak'] ?? '',
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
                 ),
               ),
             ],
@@ -132,11 +217,7 @@ class OrderItem extends StatelessWidget {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Pesanan ditolak')),
-                    );
-                  },
+                  onPressed: () => deleteOrder(context),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
                     side: const BorderSide(color: Colors.white),
@@ -161,7 +242,6 @@ class OrderItem extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: const Color(0xFF6C63FF),
-                    side: const BorderSide(color: Color(0xFF6C63FF)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
