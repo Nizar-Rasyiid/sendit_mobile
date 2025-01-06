@@ -1,12 +1,94 @@
 import 'dart:convert';
+import 'dart:io'; // Add this import for File
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
+}
+
+class ImageFromGalleryEx extends StatefulWidget {
+  final ImageSource type; // Use ImageSource type
+  ImageFromGalleryEx(this.type);
+
+  @override
+  ImageFromGalleryExState createState() => ImageFromGalleryExState(this.type);
+}
+
+class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
+  var _image;
+  late ImagePicker imagePicker;
+  final ImageSource type; // Fix type as ImageSource
+
+  ImageFromGalleryExState(this.type);
+
+  @override
+  void initState() {
+    super.initState();
+    imagePicker = ImagePicker();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(type == ImageSource.camera
+            ? 'Image from Camera'
+            : 'Image from Gallery'),
+      ),
+      body: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 52,
+          ),
+          Center(
+            child: GestureDetector(
+              onTap: () async {
+                var source = type == ImageSource.camera
+                    ? ImageSource.camera
+                    : ImageSource.gallery;
+                XFile? image = await imagePicker.pickImage(
+                    source: source,
+                    imageQuality: 50,
+                    preferredCameraDevice: CameraDevice.front);
+                setState(() {
+                  if (image != null) {
+                    _image = File(image.path);
+                  }
+                });
+              },
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(color: Colors.red[200]),
+                child: _image != null
+                    ? Image.file(
+                        _image,
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.fitHeight,
+                      )
+                    : Container(
+                        decoration: BoxDecoration(color: Colors.red[200]),
+                        width: 200,
+                        height: 200,
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: Colors.grey[800],
+                        ),
+                      ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _ProfilePageState extends State<ProfilePage> {
@@ -20,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> fetchUserData() async {
-    final url = Uri.parse('http://192.168.1.6:8000/api/user/1');
+    final url = Uri.parse('http://10.110.3.152:8000/api/user/1');
     try {
       print('Fetching from URL: $url');
       final response = await http.get(url);
@@ -29,7 +111,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (response.statusCode == 200) {
         setState(() {
-          // Langsung menggunakan response tanpa mengakses ['data']
           userData = json.decode(response.body);
           isLoading = false;
         });
@@ -60,14 +141,6 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Colors.white,
             ),
             const SizedBox(width: 8),
-            const Text(
-              'Profile',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
           ],
         ),
         actions: [
@@ -189,6 +262,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
+          //profile picture
           child: ClipOval(
             child: Image.asset(
               'assets/darwin.png',
@@ -197,7 +271,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         Container(
-          padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
@@ -210,10 +283,58 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-          child: const Icon(
-            Icons.camera_alt,
-            color: Color(0xFF6C63FF),
-            size: 24,
+          width: 45,
+          height: 45,
+          //camera button
+          child: IconButton(
+            icon: const Icon(
+              Icons.camera_alt,
+              color: Color(0xFF6C63FF),
+              size: 24,
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Choose an option'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        ListTile(
+                          leading: const Icon(Icons.photo_library),
+                          title: const Text('Gallery'),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ImageFromGalleryEx(ImageSource.gallery),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.photo_camera),
+                          title: const Text('Camera'),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ImageFromGalleryEx(ImageSource.camera),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ),
       ],
