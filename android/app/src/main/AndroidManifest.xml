@@ -33,6 +33,15 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data 
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBqt_e9qyMOuutwIOPzAc1G3PVLpMeWQDw"/>
+        <meta-data
+            android:name="com.google.android.maps.v2.MAP_ID"
+            android:value="b7c71c752e94082d"/>
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableHybridComposition"
+            android:value="true"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
