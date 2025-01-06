@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   wave: ^0.2.2
   phosphor_flutter: ^2.1.0
-  flutter_local_notifications: ^18.0.1
+  flutter_local_notifications: ^17.2.4
   flutter_timezone: ^4.0.0
   rxdart: ^0.28.0
   http: ^1.2.2
