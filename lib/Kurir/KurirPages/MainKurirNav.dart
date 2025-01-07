@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
-import 'BottomNavigation.dart';
-import 'HomeKurir.dart';
 import 'HistoryKurir.dart';
 import 'ProfileKurir.dart'; // You'll need to create this file
+import 'HomeKurir.dart'; // You'll need to create this file
+import 'package:sendit/models/user.dart';
 
 class MainKurirNavigation extends StatefulWidget {
-  const MainKurirNavigation({super.key});
+  final User user;
+  final String token;
+
+  const MainKurirNavigation({
+    Key? key,
+    required this.user,
+    required this.token,
+  }) : super(key: key);
 
   @override
   _MainKurirNavigationState createState() => _MainKurirNavigationState();
@@ -13,18 +20,17 @@ class MainKurirNavigation extends StatefulWidget {
 
 class _MainKurirNavigationState extends State<MainKurirNavigation> {
   int _currentIndex = 0;
+  late final List<Widget> _pages;
 
-  final List<Widget> _pages = [
-    const HomeKurir(),
-    const HistoryKurir(),
-    const Profilekurir(), // Create this widget
-  ];
-
-  final List<BottomNavigationBarItem> _navItems = const [
-    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-    BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
-    BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      HomeKurir(user: widget.user),
+      HistoryKurir(user: widget.user),
+      ProfileKurir(user: widget.user),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -35,15 +41,21 @@ class _MainKurirNavigationState extends State<MainKurirNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: IndexedStack(
         index: _currentIndex,
         children: _pages,
       ),
-      bottomNavigationBar: BottomNavigation(
-        items: _navItems,
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
+        selectedItemColor: const Color(0xFF6C63FD),
+        unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+        ],
       ),
     );
   }

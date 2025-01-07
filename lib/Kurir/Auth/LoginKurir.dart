@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:sendit/Kurir/Auth/RegisterKurir.dart';
 import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
-import 'package:sendit/auth/forgotpw.dart';
+import 'dart:convert';
+// Import MainKurirNavigation
+import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
+import 'package:sendit/models/user.dart'; // Import User model
 
 class LoginKurir extends StatefulWidget {
   const LoginKurir({super.key});
@@ -14,6 +18,62 @@ class _LoginKurirState extends State<LoginKurir> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   bool _rememberMe = false;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _login() async {
+    final url = Uri.parse('http://192.168.1.11:8000/api/login');
+
+    try {
+      print('Sending login request with email: ${_emailController.text}');
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        }),
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        print('Decoded response data: $responseData');
+
+        final token = responseData['token'];
+        final userJson = responseData['user'];
+        print('Raw user JSON before parsing: $userJson');
+        final user = User.fromJson(userJson);
+        print('Token: $token');
+        print('User data: $user');
+
+        // Navigate to MainKurirNavigation with token and user data
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainKurirNavigation(
+              token: token,
+              user: user,
+            ),
+          ),
+        );
+      } else {
+        // Login failed
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to login: ${response.body}')),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred. Please try again.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +89,6 @@ class _LoginKurirState extends State<LoginKurir> {
                 Container(
                   height: 200,
                   decoration: BoxDecoration(
-                    // color: Colors.blue[100],
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
@@ -44,28 +103,32 @@ class _LoginKurirState extends State<LoginKurir> {
                 const Text(
                   'Login Sebagai Kurir',
                   style: TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 1, 1, 10)),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
                 TextFormField(
+                  controller: _emailController,
                   decoration: InputDecoration(
-                    labelText: 'Nama Kurir/Email',
+                    labelText: 'Email',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    prefixIcon: const Icon(Icons.person),
+                    prefixIcon: const Icon(Icons.email),
                   ),
+                  keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Mohon masukkan nama Kurir atau email';
+                      return 'Mohon masukkan email';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  controller: _passwordController,
                   decoration: InputDecoration(
                     labelText: 'Kata Sandi',
                     border: OutlineInputBorder(
@@ -112,12 +175,7 @@ class _LoginKurirState extends State<LoginKurir> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ForgotPasswordPage(),
-                          ),
-                        );
+                        // Navigate to forgot password page
                       },
                       child: const Text('Lupa Sandi?'),
                     ),
@@ -127,14 +185,7 @@ class _LoginKurirState extends State<LoginKurir> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Process login
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MainKurirNavigation(),
-                        ),
-                        (Route<dynamic> route) => false,
-                      );
+                      _login(); // Call login function
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -147,63 +198,24 @@ class _LoginKurirState extends State<LoginKurir> {
                   child: const Text(
                     'Masuk',
                     style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 1,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        "Atau",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 1,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                OutlinedButton.icon(
-                  onPressed: () {
-                    // Implement Apple ID login
-                  },
-                  icon: const Icon(Icons.apple),
-                  label: const Text('Lanjutkan dengan Apple ID'),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(
-                      color: Colors.indigo, // Warna border
-                      width: 2, // Ketebalan border
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                ),
-                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text('Belum memiliki akun?'),
                     TextButton(
                       onPressed: () {
-                        // Navigate to registration page
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Registerkurir()));
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const RegisterKurir()),
+                        );
                       },
                       child: const Text('Daftar'),
                     ),

@@ -1,49 +1,18 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sendit/models/user.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final User user;
+
+  const ProfilePage({super.key, required this.user});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  Map<String, dynamic>? userData;
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchUserData();
-  }
-
-  Future<void> fetchUserData() async {
-    final url = Uri.parse('http://192.168.1.17:8000/api/user/1');
-    try {
-      print('Fetching from URL: $url');
-      final response = await http.get(url);
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        setState(() {
-          // Langsung menggunakan response tanpa mengakses ['data']
-          userData = json.decode(response.body);
-          isLoading = false;
-        });
-      } else {
-        throw Exception('Failed to load user data: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error detail: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,11 +23,6 @@ class _ProfilePageState extends State<ProfilePage> {
         elevation: 0,
         title: Row(
           children: [
-            Image.asset(
-              'assets/sendit.png',
-              height: 24,
-              color: Colors.white,
-            ),
             const SizedBox(width: 8),
             const Text(
               'Profile',
@@ -79,50 +43,15 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6C63FF)),
-              ),
-            )
-          : userData == null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.error_outline,
-                        size: 60,
-                        color: Colors.red,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Failed to load user data',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey[800],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      ElevatedButton(
-                        onPressed: fetchUserData,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF6C63FF),
-                        ),
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                )
-              : SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildProfileHeader(),
-                      const SizedBox(height: 20),
-                      _buildInfoSection(),
-                    ],
-                  ),
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildProfileHeader(),
+            const SizedBox(height: 20),
+            _buildInfoSection(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -150,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
           _buildProfileImage(),
           const SizedBox(height: 16),
           Text(
-            userData?['nama'] ?? 'N/A',
+            widget.user.nama,
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -158,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           Text(
-            userData?['role']?.toUpperCase() ?? 'USER',
+            widget.user.role,
             style: TextStyle(
               fontSize: 14,
               color: Colors.white.withOpacity(0.8),
@@ -229,10 +158,10 @@ class _ProfilePageState extends State<ProfilePage> {
             'Personal Information',
             Icons.person_outline,
             [
-              _buildInfoRow('Name', userData?['nama'] ?? 'N/A'),
-              _buildInfoRow('Phone', userData?['no_hp'] ?? 'N/A'),
-              _buildInfoRow('Email', userData?['email'] ?? 'N/A'),
-              _buildInfoRow('Address', userData?['alamat'] ?? 'N/A'),
+              _buildInfoRow('Name', widget.user.nama),
+              _buildInfoRow('Phone', widget.user.noHp),
+              _buildInfoRow('Email', widget.user.email),
+              _buildInfoRow('Address', widget.user.alamat),
             ],
           ),
           const SizedBox(height: 16),
@@ -240,10 +169,10 @@ class _ProfilePageState extends State<ProfilePage> {
             'Account Information',
             Icons.security,
             [
-              _buildInfoRow('Username', userData?['username'] ?? 'N/A'),
-              _buildInfoRow('Role', (userData?['role'] ?? 'N/A').toUpperCase()),
-              _buildInfoRow(
-                  'Member Since', _formatDate(userData?['created_at'] ?? '')),
+              _buildInfoRow('Username', widget.user.username),
+              _buildInfoRow('Role', widget.user.role.toUpperCase()),
+              // _buildInfoRow(
+              //     'Member Since', _formatDate(widget.user.createdAt)),
             ],
           ),
         ],

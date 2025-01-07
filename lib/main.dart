@@ -12,6 +12,7 @@ import 'auth/login.dart';
 import 'auth/register.dart';
 import 'Kurir/Auth/LoginKurir.dart';
 import 'order/orderPage.dart';
+import 'models/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
-        '/main': (context) => const MainScreen(),
+        // '/main': (context) => const MainScreen(),
         '/OrderPage': (context) => const OrderPage(),
         '/FAQPage': (context) => FAQPage(),
       },
@@ -55,7 +56,14 @@ class MyApp extends StatelessWidget {
 }
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final User user;
+  final String token;
+
+  const MainScreen({
+    Key? key,
+    required this.user,
+    required this.token,
+  }) : super(key: key);
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -63,12 +71,17 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-  final List<Widget> _pages = [
-    const HomePage(),
-    const HistoryPage(),
-    // const Placeholder(), // Tracking page placeholder
-    const ProfilePage(), // Profile page placeholder
-  ];
+  late List<Widget> _pages; // Change to late initialization
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      HomePage(user: widget.user),
+      HistoryPage(user: widget.user),
+      ProfilePage(user: widget.user),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -92,8 +105,6 @@ class _MainScreenState extends State<MainScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
-          // BottomNavigationBarItem(
-          //     icon: Icon(Icons.location_on), label: 'Tracking'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),

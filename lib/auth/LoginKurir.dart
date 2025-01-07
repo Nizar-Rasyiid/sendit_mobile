@@ -125,8 +125,7 @@ class _LoginKurirState extends State<LoginKurir> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () {
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 66, 72, 255),
                     shape: RoundedRectangleBorder(
@@ -192,7 +191,7 @@ class _LoginKurirState extends State<LoginKurir> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const Registerkurir()));
+                                builder: (context) => const RegisterKurir()));
                       },
                       child: const Text('Daftar'),
                     ),
