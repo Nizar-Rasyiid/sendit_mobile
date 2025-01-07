@@ -13,7 +13,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ImageFromGalleryEx extends StatefulWidget {
-  final ImageSource type; // Use ImageSource type
+  final ImageSource type;
   ImageFromGalleryEx(this.type);
 
   @override
@@ -23,7 +23,7 @@ class ImageFromGalleryEx extends StatefulWidget {
 class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
   var _image;
   late ImagePicker imagePicker;
-  final ImageSource type; // Fix type as ImageSource
+  final ImageSource type;
 
   ImageFromGalleryExState(this.type);
 
@@ -95,6 +95,95 @@ class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic>? userData;
   bool isLoading = true;
 
+  Future<void> _editUserData() async {
+    if (userData == null) return;
+
+    final editedData = await showDialog<Map<String, dynamic>>(
+      context: context,
+      builder: (context) {
+        final nameController = TextEditingController(text: userData?['nama']);
+        final phoneController = TextEditingController(text: userData?['no_hp']);
+        final emailController = TextEditingController(text: userData?['email']);
+        final addressController =
+            TextEditingController(text: userData?['alamat']);
+
+        return AlertDialog(
+          title: const Text('Edit User Data'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: phoneController,
+                  decoration: const InputDecoration(labelText: 'Phone'),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: addressController,
+                  decoration: const InputDecoration(labelText: 'Address'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop({
+                  'nama': nameController.text,
+                  'no_hp': phoneController.text,
+                  'email': emailController.text,
+                  'alamat': addressController.text,
+                });
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (editedData != null) {
+      setState(() {
+        userData = {
+          ...userData!,
+          ...editedData,
+        };
+      });
+
+      final url = Uri.parse('http://10.60.225.171:8000/api/user/1');
+      try {
+        final response = await http.put(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(userData),
+        );
+
+        if (response.statusCode == 200) {
+          print('User data updated successfully');
+        } else {
+          throw Exception('Failed to update user data: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Error updating user data: $e');
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -102,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> fetchUserData() async {
-    final url = Uri.parse('http://10.110.3.152:8000/api/user/1');
+    final url = Uri.parse('http://10.60.225.171:8000/api/user/1');
     try {
       print('Fetching from URL: $url');
       final response = await http.get(url);
@@ -146,8 +235,8 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit, color: Colors.white),
-            onPressed: () {
-              // Implementasi edit profile
+            onPressed: () async {
+              await _editUserData();
             },
           ),
         ],
