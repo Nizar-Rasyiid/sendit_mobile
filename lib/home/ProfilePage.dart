@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:sendit/auth/urlPort.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -165,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
         };
       });
 
-      final url = Uri.parse('http://10.60.225.171:8000/api/user/1');
+      final url = Uri.parse('${urlPort}api/user/1');
       try {
         final response = await http.put(
           url,
@@ -191,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> fetchUserData() async {
-    final url = Uri.parse('http://10.60.225.171:8000/api/user/1');
+    final url = Uri.parse('${urlPort}api/user/1');
     try {
       print('Fetching from URL: $url');
       final response = await http.get(url);

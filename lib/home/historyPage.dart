@@ -1,128 +1,225 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:sendit/auth/urlPort.dart';
+import 'package:sendit/MapPage.dart';
 
-class HistoryPage extends StatelessWidget {
+class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
 
-  Future<List<dynamic>> fetchOrdersByUserId(int userId) async {
-    final response = await http
-        .get(Uri.parse('http://192.168.1.6:8000/api/pemesanan/$userId'));
+  @override
+  _HistoryPageState createState() => _HistoryPageState();
+}
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load orders');
+class _HistoryPageState extends State<HistoryPage> {
+  int _currentIndex = 1;
+  List<Map<String, dynamic>> _history = [];
+  bool isLoading = true;
+
+  final List<BottomNavigationBarItem> _navItems = const [
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
+    BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
+    BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchHistory();
+  }
+
+  Future<void> fetchHistory() async {
+    try {
+      final response = await http.get(
+        Uri.parse('${urlPort}api/pemesanan'),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          _history = data.map((item) {
+            return {
+              'location': item['lokasi_tujuan'] ?? 'Lokasi tidak tersedia',
+              'status': item['status'] ?? 'Status tidak tersedia',
+              'date': _formatDate(item['created_at'] ?? ''),
+              'price': 'Rp ${item['total_harga'] ?? '0'}',
+              'latitude': item['latitude'] ?? 0.0,
+              'longitude': item['longitude'] ?? 0.0,
+            };
+          }).toList();
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load history');
+      }
+    } catch (e) {
+      print('Error fetching history: $e');
+      setState(() {
+        isLoading = false;
+      });
+
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text('Failed to load history: $e'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     }
+  }
+
+  String _formatDate(String dateString) {
+    try {
+      final DateTime date = DateTime.parse(dateString);
+      return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+    } catch (e) {
+      return 'Invalid date';
+    }
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color(0xFF6C63FF),
         elevation: 0,
-        title: Row(
+        title: SafeArea(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Image.asset(
+                'assets/sendit.png',
+                height: 24,
+                color: Colors.white,
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'Sendit!',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              'assets/sendit.png',
-              height: 24,
-            ),
-            const SizedBox(width: 8),
+            const SizedBox(height: 20),
             const Text(
-              'Sendit!',
+              'Riwayat Pengiriman',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.black,
               ),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _history.isEmpty
+                      ? const Center(child: Text('Tidak ada riwayat pengiriman'))
+                      : RefreshIndicator(
+                          onRefresh: fetchHistory,
+                          child: ListView.separated(
+                            itemCount: _history.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              final item = _history[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MapPage(
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF6C63FF),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item['location']!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        item['status']!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        item['date']!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            item['price']!,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
             ),
           ],
         ),
       ),
-      body: FutureBuilder<List<dynamic>>(
-        future: fetchOrdersByUserId(1), // Mengambil data untuk id_user = 1
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No history found'));
-          } else {
-            return ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final order = snapshot.data![index];
-                return InkWell(
-                  onTap: () {
-                    // Tambahkan navigasi jika diperlukan
-                  },
-                  child: _buildHistoryItem(
-                    order['lokasi_jemput'] ?? 'Unknown Location',
-                    '${order['jarak']} Km',
-                    Icons.local_shipping,
-                  ),
-                );
-              },
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildHistoryItem(String address, String distance, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF6C63FF),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: const Color(0xFF6C63FF)),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  address,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  distance,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.white,
-            size: 16,
-          ),
-        ],
+      bottomNavigationBar: BottomNavigationBar(
+        items: _navItems,
+        currentIndex: _currentIndex,
+        selectedItemColor: const Color(0xFF6C63FF),
+        onTap: _onItemTapped,
       ),
     );
   }

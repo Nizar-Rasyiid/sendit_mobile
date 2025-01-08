@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:sendit/auth/urlPort.dart';
 class OrderListPage extends StatefulWidget {
   const OrderListPage({super.key});
 
@@ -42,7 +42,7 @@ class _OrderListPageState extends State<OrderListPage> {
   Future<void> fetchOrders() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.6:8000/api/pemesanan'),
+        Uri.parse('${urlPort}api/pemesanan'),
       );
 
       if (response.statusCode == 200) {
@@ -134,7 +134,7 @@ class OrderItem extends StatelessWidget {
   Future<void> deleteOrder(BuildContext context) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://192.168.1.6:8000/api/pemesanan/${order['id']}'),
+        Uri.parse('${urlPort}api/pemesanan/${order['id']}'),
       );
 
       if (response.statusCode == 200) {

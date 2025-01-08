@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:sendit/auth/urlPort.dart';
 class ProfileKurir extends StatefulWidget {
   const ProfileKurir({super.key});
 
@@ -20,7 +20,7 @@ class _ProfileKurirState extends State<ProfileKurir> {
   }
 
 Future<void> fetchUserData() async {
-    final url = Uri.parse('http://192.168.1.6:8000/api/user/3');
+    final url = Uri.parse('${urlPort}api/user/3');
     try {
       final response = await http.get(
         url,

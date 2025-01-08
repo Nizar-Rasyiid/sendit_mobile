@@ -88,11 +88,13 @@ class _MapPageState extends State<MapPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
+            heroTag: 'zoomInTag', // Unique tag
             onPressed: _zoomIn,
             child: const Icon(Icons.zoom_in),
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
+            heroTag: 'zoomOutTag', // Unique tag
             onPressed: _zoomOut,
             child: const Icon(Icons.zoom_out),
           ),
@@ -101,6 +103,7 @@ class _MapPageState extends State<MapPage> {
             width: 70,
             height: 70,
             child: FloatingActionButton(
+              heroTag: 'locatePositionTag', // Unique tag
               onPressed: _locateCurrentPosition,
               child: const Icon(Icons.my_location, size: 35),
             ),

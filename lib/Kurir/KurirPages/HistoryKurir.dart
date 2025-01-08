@@ -3,6 +3,8 @@ import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
 import 'BottomNavigation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:sendit/auth/urlPort.dart';
+import 'package:sendit/MapPage.dart';
 
 class HistoryKurir extends StatefulWidget {
   const HistoryKurir({super.key});
@@ -31,7 +33,7 @@ class _HistoryKurirState extends State<HistoryKurir> {
   Future<void> fetchHistory() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.6:8000/api/pemesanan'),
+        Uri.parse('${urlPort}api/pemesanan'),
       );
 
       if (response.statusCode == 200) {
@@ -43,6 +45,9 @@ class _HistoryKurirState extends State<HistoryKurir> {
               'status': item['status'] ?? 'Status tidak tersedia',
               'date': _formatDate(item['created_at'] ?? ''),
               'price': 'Rp ${item['total_harga'] ?? '0'}',
+              // Assuming you have latitude and longitude in your response
+              'latitude': item['latitude'] ?? 0.0, // Replace with actual key
+              'longitude': item['longitude'] ?? 0.0, // Replace with actual key
             };
           }).toList();
           isLoading = false;
@@ -55,7 +60,7 @@ class _HistoryKurirState extends State<HistoryKurir> {
       setState(() {
         isLoading = false;
       });
-      
+
       if (mounted) {
         showDialog(
           context: context,
@@ -119,9 +124,9 @@ class _HistoryKurirState extends State<HistoryKurir> {
                       Text(
                         'Muhammad',
                         style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
                         ),
                       ),
                       SizedBox(width: 4),
@@ -162,70 +167,82 @@ class _HistoryKurirState extends State<HistoryKurir> {
             const SizedBox(height: 20),
             Expanded(
               child: isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _workHistory.isEmpty
-                  ? const Center(child: Text('Tidak ada riwayat pengiriman'))
-                  : RefreshIndicator(
-                      onRefresh: fetchHistory,
-                      child: ListView.separated(
-                        itemCount: _workHistory.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 12),
-                        itemBuilder: (context, index) {
-                          final item = _workHistory[index];
-                          return Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF6C63FF),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item['location']!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  item['status']!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  item['date']!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      item['price']!,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
+                  ? const Center(child: CircularProgressIndicator())
+                  : _workHistory.isEmpty
+                      ? const Center(child: Text('Tidak ada riwayat pengiriman'))
+                      : RefreshIndicator(
+                          onRefresh: fetchHistory,
+                          child: ListView.separated(
+                            itemCount: _workHistory.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              final item = _workHistory[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MapPage(),
                                     ),
-                                  ],
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF6C63FF),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item['location']!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        item['status']!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        item['date']!,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            item['price']!,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                              );
+                            },
+                          ),
+                        ),
             ),
           ],
         ),
