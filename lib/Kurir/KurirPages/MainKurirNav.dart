@@ -9,10 +9,10 @@ class MainKurirNavigation extends StatefulWidget {
   final String token;
 
   const MainKurirNavigation({
-    Key? key,
+    super.key,
     required this.user,
     required this.token,
-  }) : super(key: key);
+  });
 
   @override
   _MainKurirNavigationState createState() => _MainKurirNavigationState();

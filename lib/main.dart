@@ -5,13 +5,9 @@ import 'package:sendit/home/WelcomeScreen.dart';
 import 'package:sendit/home/homepage.dart';
 import 'package:sendit/home/historyPage.dart';
 import 'package:sendit/local_notifications.dart';
-import 'package:sendit/order/orderInformationPage.dart';
 import 'package:sendit/order/orderPage.dart';
-import 'package:sendit/order/order_chat.dart';
 import 'auth/login.dart';
 import 'auth/register.dart';
-import 'Kurir/Auth/LoginKurir.dart';
-import 'order/orderPage.dart';
 import 'models/user.dart';
 
 void main() async {
@@ -60,10 +56,10 @@ class MainScreen extends StatefulWidget {
   final String token;
 
   const MainScreen({
-    Key? key,
+    super.key,
     required this.user,
     required this.token,
-  }) : super(key: key);
+  });
 
   @override
   _MainScreenState createState() => _MainScreenState();

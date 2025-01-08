@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -57,6 +59,8 @@ class FAQPage extends StatelessWidget {
           "Saat ini SendIt belum memiliki fitur tersebut, kedepannya akan kami kembangkan lagi."
     },
   ];
+
+  FAQPage({super.key});
 
   @override
   Widget build(BuildContext context) {

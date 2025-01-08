@@ -22,10 +22,6 @@ class _HistoryPageState extends State<HistoryPage> {
       if (response.statusCode == 200) {
         final List<dynamic> responseBody = jsonDecode(response.body);
         print('Response body decoded: $responseBody');
-        if (responseBody == null) {
-          print('Response body is null, returning empty list');
-          return [];
-        }
         print('Returning response body');
         return responseBody;
       }

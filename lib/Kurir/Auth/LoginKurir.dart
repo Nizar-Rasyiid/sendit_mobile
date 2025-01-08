@@ -4,7 +4,6 @@ import 'package:sendit/Kurir/Auth/RegisterKurir.dart';
 import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
 import 'dart:convert';
 // Import MainKurirNavigation
-import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
 import 'package:sendit/models/user.dart'; // Import User model
 
 class LoginKurir extends StatefulWidget {

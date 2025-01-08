@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,6 +16,8 @@ class MyApp extends StatelessWidget {
 }
 
 class ChatPage extends StatelessWidget {
+  const ChatPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +116,7 @@ class ChatBubble extends StatelessWidget {
   final bool isSender;
   final String message;
 
-  ChatBubble({required this.isSender, required this.message});
+  const ChatBubble({super.key, required this.isSender, required this.message});
 
   @override
   Widget build(BuildContext context) {

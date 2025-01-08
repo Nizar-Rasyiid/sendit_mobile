@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/home/historyPage.dart';
 import 'package:sendit/local_notifications.dart';
-import 'package:sendit/order/orderInformationPage.dart';
 import 'package:sendit/models/user.dart';
 
 class HomePage extends StatefulWidget {
   final User user;
 
-  const HomePage({Key? key, required this.user}) : super(key: key);
+  const HomePage({super.key, required this.user});
 
   @override
   _HomePageState createState() => _HomePageState();

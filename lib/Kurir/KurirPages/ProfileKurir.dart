@@ -89,7 +89,7 @@ class _ProfileKurirState extends State<ProfileKurir> {
             ),
           ),
           Text(
-            widget.user.role?.toUpperCase() ?? 'KURIR',
+            widget.user.role.toUpperCase() ?? 'KURIR',
             style: TextStyle(
               fontSize: 14,
               color: Colors.white.withOpacity(0.8),

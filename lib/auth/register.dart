@@ -22,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  String _role = 'pemesan'; // Default role
+  final String _role = 'pemesan'; // Default role
 
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {

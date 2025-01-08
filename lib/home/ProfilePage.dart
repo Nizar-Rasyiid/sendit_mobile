@@ -1,7 +1,9 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:sendit/models/user.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -13,6 +15,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final ImagePicker _imagePicker = ImagePicker();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,25 +25,18 @@ class _ProfilePageState extends State<ProfilePage> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF6C63FF),
         elevation: 0,
-        title: Row(
-          children: [
-            const SizedBox(width: 8),
-            const Text(
-              'Profile',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ],
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit, color: Colors.white),
-            onPressed: () {
-              // Implementasi edit profile
-            },
+            onPressed: () => _showEditProfileDialog(),
           ),
         ],
       ),
@@ -53,6 +50,81 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  void _showEditProfileDialog() {
+    final nameController = TextEditingController(text: widget.user.nama);
+    final phoneController = TextEditingController(text: widget.user.noHp);
+    final addressController = TextEditingController(text: widget.user.alamat);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Profile'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                ),
+                TextField(
+                  controller: phoneController,
+                  decoration: const InputDecoration(labelText: 'Phone'),
+                ),
+                TextField(
+                  controller: addressController,
+                  decoration: const InputDecoration(labelText: 'Address'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _updateProfile(
+                  nameController.text,
+                  phoneController.text,
+                  addressController.text,
+                );
+                Navigator.of(context).pop();
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateProfile(String name, String phone, String address) async {
+    setState(() {
+      widget.user.nama = name;
+      widget.user.noHp = phone;
+      widget.user.alamat = address;
+    });
+
+    final response = await http.put(
+      Uri.parse(
+          'http://192.168.1.11:8000/api/userUpdate/${widget.user.id_user}'),
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      body: jsonEncode({
+        'nama': name,
+        'noHp': phone,
+        'alamat': address,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Profile updated successfully');
+    } else {
+      print('Failed to update profile');
+    }
   }
 
   Widget _buildProfileHeader() {
@@ -119,34 +191,72 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           child: ClipOval(
-            child: Image.asset(
-              'assets/darwin.png',
+            child: Image.network(
+              widget.user.image,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => const Icon(
+                Icons.person,
+                size: 100,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: const Icon(
-            Icons.camera_alt,
-            color: Color(0xFF6C63FF),
-            size: 24,
+        GestureDetector(
+          onTap: _pickImage,
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.camera_alt,
+              color: Color(0xFF6C63FF),
+              size: 24,
+            ),
           ),
         ),
       ],
     );
+  }
+
+  Future<void> _pickImage() async {
+    try {
+      final pickedFile =
+          await _imagePicker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        final request = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'http://192.168.1.11:8000/api/user/${widget.user.id_user}/upload-image'),
+        );
+        request.files
+            .add(await http.MultipartFile.fromPath('image', pickedFile.path));
+        final response = await request.send();
+
+        if (response.statusCode == 200) {
+          final responseData = await response.stream.bytesToString();
+          final jsonResponse = jsonDecode(responseData);
+          setState(() {
+            widget.user.image = jsonResponse['image_url'];
+          });
+          print('Image uploaded successfully');
+        } else {
+          print('Failed to upload image');
+        }
+      }
+    } catch (e) {
+      print('Error picking or uploading image: $e');
+    }
   }
 
   Widget _buildInfoSection() {
@@ -171,8 +281,6 @@ class _ProfilePageState extends State<ProfilePage> {
             [
               _buildInfoRow('Username', widget.user.username),
               _buildInfoRow('Role', widget.user.role.toUpperCase()),
-              // _buildInfoRow(
-              //     'Member Since', _formatDate(widget.user.createdAt)),
             ],
           ),
         ],
@@ -262,15 +370,5 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
-  }
-
-  String _formatDate(String dateStr) {
-    if (dateStr.isEmpty) return 'N/A';
-    try {
-      final date = DateTime.parse(dateStr);
-      return '${date.day}/${date.month}/${date.year}';
-    } catch (e) {
-      return 'N/A';
-    }
   }
 }

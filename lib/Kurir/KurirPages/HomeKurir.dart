@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/Kurir/KurirPages/HistoryKurir.dart';
 import 'package:sendit/Kurir/KurirPages/OrderList.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:sendit/FAQ/faqPage.dart';
 import 'package:sendit/models/user.dart';
 
