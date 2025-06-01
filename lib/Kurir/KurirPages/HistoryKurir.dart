@@ -25,7 +25,7 @@ class _HistoryKurirState extends State<HistoryKurir> {
   Future<List<dynamic>> fetchOrdersByKurirId() async {
     try {
       final url = Uri.parse(
-          'http://192.168.1.11:8000/api/pemesanan/pemesanankurir/${widget.user.id_user}');
+          'http://192.168.1.88:8000/api/pemesanan/pemesanankurir/${widget.user.id_user}');
       final response = await http.get(url);
       print('Response status: ${response.statusCode}');
       print('Response body raw: ${response.body}');

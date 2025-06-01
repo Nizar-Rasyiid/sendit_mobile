@@ -22,12 +22,12 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  final String _role = 'pemesan'; // Default role
+  final String _role = 'pemesan'; // Ubah dari 'admin' ke 'pemesan'
 
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       final response = await http.post(
-        Uri.parse('http://192.168.1.11:8000/api/register'),
+        Uri.parse('http://192.168.1.88:8000/api/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'nama': _namaController.text,
@@ -37,14 +37,14 @@ class _RegisterPageState extends State<RegisterPage> {
           'username': _usernameController.text,
           'password': _passwordController.text,
           'password_confirmation': _confirmPasswordController.text,
-          'role': 'pengirim',
+          'role': 'pemesan', // Ubah dari 'admin' ke 'pemesan'
         }),
       );
 
       if (response.statusCode == 201) {
         // Registration successful
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('User registered successfully!')),
+          const SnackBar(content: Text('Pemesan berhasil didaftarkan!')),
         );
         Navigator.pushReplacement(
           context,
@@ -53,7 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
       } else {
         // Registration failed
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to register: ${response.body}')),
+          SnackBar(content: Text('Gagal mendaftar: ${response.body}')),
         );
       }
     }
@@ -84,6 +84,29 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
+                // Ubah indikator role menjadi Pemesan
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade50,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.orange.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.local_shipping, color: Colors.orange.shade600),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Pendaftaran Pemesan',
+                        style: TextStyle(
+                          color: Colors.orange.shade600,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: _namaController,
                   decoration: InputDecoration(
@@ -228,37 +251,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                // DropdownButtonFormField<String>(
-                //   value: _role,
-                //   decoration: InputDecoration(
-                //     labelText: 'Role',
-                //     border: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10),
-                //     ),
-                //   ),
-                //   items: ['admin', 'kurir', 'pemesan'].map((String role) {
-                //     return DropdownMenuItem<String>(
-                //       value: role,
-                //       child: Text(role),
-                //     );
-                //   }).toList(),
-                //   onChanged: (String? newValue) {
-                //     setState(() {
-                //       _role = newValue!;
-                //     });
-                //   },
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Mohon pilih role';
-                //     }
-                //     return null;
-                //   },
-                // ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: _register,
-                  child: const Text('Daftar'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigo,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Daftar '),
                 ),
               ],
             ),

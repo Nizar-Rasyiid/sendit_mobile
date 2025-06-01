@@ -25,7 +25,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
       TextEditingController();
 
   Future<void> _register() async {
-    final url = Uri.parse('http://192.168.1.11:8000/api/register');
+    final url = Uri.parse('http://192.168.1.88:8000/api/register');
 
     final response = await http.post(
       url,

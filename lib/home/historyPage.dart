@@ -14,7 +14,7 @@ class _HistoryPageState extends State<HistoryPage> {
   Future<List<dynamic>> fetchOrdersByUserId() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://192.168.1.11:8000/api/pemesanan/pemesanan/${widget.user.id_user}'));
+          'http://192.168.1.88:8000/api/pemesanan/pemesanan/${widget.user.id_user}'));
       print('Response status: ${response.statusCode}');
       print('Response body raw: ${response.body}');
       print("id usernya adalah ${widget.user.id_user}");

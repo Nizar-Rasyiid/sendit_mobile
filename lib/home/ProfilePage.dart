@@ -111,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     final response = await http.put(
       Uri.parse(
-          'http://192.168.1.11:8000/api/userUpdate/${widget.user.id_user}'),
+          'http://192.168.1.88:8000/api/userUpdate/${widget.user.id_user}'),
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
       body: jsonEncode({
         'nama': name,
@@ -237,7 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
         final request = http.MultipartRequest(
           'POST',
           Uri.parse(
-              'http://192.168.1.11:8000/api/user/${widget.user.id_user}/upload-image'),
+              'http://192.168.1.88:8000/api/user/${widget.user.id_user}/upload-image'),
         );
         request.files
             .add(await http.MultipartFile.fromPath('image', pickedFile.path));

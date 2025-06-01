@@ -22,7 +22,7 @@ class _LoginKurirState extends State<LoginKurir> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _login() async {
-    final url = Uri.parse('http://192.168.1.11:8000/api/login');
+    final url = Uri.parse('http://192.168.1.88:8000/api/login');
 
     try {
       print('Sending login request with email: ${_emailController.text}');
