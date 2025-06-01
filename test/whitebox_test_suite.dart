@@ -209,11 +209,13 @@ Widget _buildBankOptions() {
     StringBuffer report = StringBuffer();
     report.writeln('LAPORAN PENGUJIAN WHITEBOX');
     report.writeln('==========================\n');
-    
+
     // Header tabel
-    report.writeln('| No | ID Kasus Uji | Deskripsi | Path yang Diuji | Statement Coverage | Branch Coverage | Condition Coverage | Hasil | Keterangan |');
-    report.writeln('|----|--------------|------------|-----------------|-------------------|----------------|-------------------|-------|------------|');
-    
+    report.writeln(
+        '| No | ID Kasus Uji | Deskripsi | Path yang Diuji | Statement Coverage | Branch Coverage | Condition Coverage | Hasil | Keterangan |');
+    report.writeln(
+        '|----|--------------|------------|-----------------|-------------------|----------------|-------------------|-------|------------|');
+
     // Baris tabel
     for (var i = 0; i < reports.length; i++) {
       report.writeln(reports[i].toTableRow(i + 1));
@@ -223,9 +225,11 @@ Widget _buildBankOptions() {
     report.writeln('\nRINGKASAN');
     report.writeln('=========');
     report.writeln('Total Kasus Uji: ${reports.length}');
-    report.writeln('Berhasil: ${reports.where((r) => r.result == 'BERHASIL').length}');
-    report.writeln('Gagal: ${reports.where((r) => r.result == 'GAGAL').length}');
-    
+    report.writeln(
+        'Berhasil: ${reports.where((r) => r.result == 'BERHASIL').length}');
+    report
+        .writeln('Gagal: ${reports.where((r) => r.result == 'GAGAL').length}');
+
     return report.toString();
   }
 
@@ -250,10 +254,7 @@ Widget _buildBankOptions() {
 
     // Menambahkan data
     for (var i = 0; i < reports.length; i++) {
-      sheetObject.appendRow([
-        (i + 1).toString(),
-        ...reports[i].toExcelRow()
-      ]);
+      sheetObject.appendRow([(i + 1).toString(), ...reports[i].toExcelRow()]);
     }
 
     // Menyimpan file
@@ -263,10 +264,11 @@ Widget _buildBankOptions() {
 }
 
 void main() {
-  testWidgets('Menjalankan Suite Pengujian Whitebox', (WidgetTester tester) async {
+  testWidgets('Menjalankan Suite Pengujian Whitebox',
+      (WidgetTester tester) async {
     final testSuite = WhiteboxTestSuite();
     testSuite.runAllTests();
     print(testSuite.generateReport());
     await testSuite.exportToExcel();
   });
-} 
+}

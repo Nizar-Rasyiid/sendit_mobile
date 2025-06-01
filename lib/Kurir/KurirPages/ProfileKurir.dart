@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:http/http.dart' as http;
-import 'package:sendit/auth/urlPort.dart';
-=======
 import 'package:sendit/models/user.dart';
 
->>>>>>> origin/Nizar
 class ProfileKurir extends StatefulWidget {
   final User user;
   const ProfileKurir({super.key, required this.user});
@@ -15,101 +10,6 @@ class ProfileKurir extends StatefulWidget {
 }
 
 class _ProfileKurirState extends State<ProfileKurir> {
-<<<<<<< HEAD
-  Map<String, dynamic>? userData;
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchUserData();
-  }
-
-Future<void> fetchUserData() async {
-    final url = Uri.parse('${urlPort}api/user/3');
-    try {
-      final response = await http.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
-
-      // Tambahkan logging untuk debug
-      print('Status Code: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        final decodedData = json.decode(response.body);
-        print('Decoded data: $decodedData');
-        
-        setState(() {
-          // Jika response berupa array, ambil data pertama
-          userData = decodedData is List ? decodedData[0] : decodedData;
-          isLoading = false;
-        });
-      } else if (response.statusCode == 404) {
-        throw Exception('User not found');
-      } else {
-        throw Exception('Failed to load user data: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error detail: $e');
-      setState(() {
-        isLoading = false;
-        userData = null;
-      });
-
-      if (mounted) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to load user data: $e\n\nPlease check your API connection and try again.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    }
-  }
-
-  // Fungsi untuk handle edit profile
-  void _handleEditProfile() {
-    // Implementasi edit profile
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Edit Profile'),
-        content: const Text('Feature coming soon!'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _formatDate(String dateStr) {
-    if (dateStr.isEmpty) return 'N/A';
-    try {
-      final date = DateTime.parse(dateStr);
-      // Format tanggal dengan leading zero
-      return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
-    } catch (e) {
-      return 'N/A';
-    }
-  }
-
-=======
->>>>>>> origin/Nizar
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,56 +43,6 @@ Future<void> fetchUserData() async {
           ),
         ],
       ),
-<<<<<<< HEAD
-      body: RefreshIndicator(
-        onRefresh: fetchUserData,
-        child: isLoading
-            ? const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6C63FF)),
-                ),
-              )
-            : userData == null
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.error_outline,
-                          size: 60,
-                          color: Colors.red,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Failed to load user data',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey[800],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: fetchUserData,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF6C63FF),
-                          ),
-                          child: const Text('Retry'),
-                        ),
-                      ],
-                    ),
-                  )
-                : SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      children: [
-                        _buildProfileHeader(),
-                        const SizedBox(height: 20),
-                        _buildInfoSection(),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-=======
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -201,7 +51,6 @@ Future<void> fetchUserData() async {
             _buildInfoSection(),
           ],
         ),
->>>>>>> origin/Nizar
       ),
     );
   }
@@ -413,5 +262,9 @@ Future<void> fetchUserData() async {
         ],
       ),
     );
+  }
+
+  void _handleEditProfile() {
+    // TODO: Implement edit profile functionality
   }
 }

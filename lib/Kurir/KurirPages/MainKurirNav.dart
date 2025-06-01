@@ -22,19 +22,6 @@ class _MainKurirNavigationState extends State<MainKurirNavigation> {
   int _currentIndex = 0;
   late final List<Widget> _pages;
 
-<<<<<<< HEAD
-  final List<Widget> _pages = [
-    const HomeKurir(),
-    const HistoryKurir(),
-    const ProfileKurir(), // Create this widget
-  ];
-
-  final List<BottomNavigationBarItem> _navItems = const [
-    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-    BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
-    BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-  ];
-=======
   @override
   void initState() {
     super.initState();
@@ -44,7 +31,6 @@ class _MainKurirNavigationState extends State<MainKurirNavigation> {
       ProfileKurir(user: widget.user),
     ];
   }
->>>>>>> origin/Nizar
 
   void _onItemTapped(int index) {
     setState(() {

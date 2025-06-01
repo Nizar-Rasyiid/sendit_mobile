@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:sendit/models/user.dart';
@@ -190,8 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
 
     final response = await http.put(
-      Uri.parse(
-          '${urlPort}api/userUpdate/${widget.user.id_user}'),
+      Uri.parse('${urlPort}api/userUpdate/${widget.user.id_user}'),
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
       body: jsonEncode({
         'nama': name,
@@ -317,8 +317,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (pickedFile != null) {
         final request = http.MultipartRequest(
           'POST',
-          Uri.parse(
-              '${urlPort}api/user/${widget.user.id_user}/upload-image'),
+          Uri.parse('${urlPort}api/user/${widget.user.id_user}/upload-image'),
         );
         request.files
             .add(await http.MultipartFile.fromPath('image', pickedFile.path));

@@ -27,6 +27,7 @@ class _HistoryKurirState extends State<HistoryKurir> {
   void initState() {
     super.initState();
     _futureWorkHistory = fetchOrdersByKurirId();
+    fetchHistory();
   }
 
   Future<List<dynamic>> fetchOrdersByKurirId() async {
@@ -57,12 +58,6 @@ class _HistoryKurirState extends State<HistoryKurir> {
   //   BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
   //   BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
   // ];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchHistory();
-  }
 
   Future<void> fetchHistory() async {
     try {
@@ -204,7 +199,8 @@ class _HistoryKurirState extends State<HistoryKurir> {
               child: isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : _workHistory.isEmpty
-                      ? const Center(child: Text('Tidak ada riwayat pengiriman'))
+                      ? const Center(
+                          child: Text('Tidak ada riwayat pengiriman'))
                       : RefreshIndicator(
                           onRefresh: fetchHistory,
                           child: ListView.separated(
