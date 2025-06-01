@@ -73,7 +73,10 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _pages = [
-      HomePage(user: widget.user),
+      HomePage(
+        user: widget.user,
+        token: widget.token,
+      ),
       HistoryPage(user: widget.user),
       ProfilePage(user: widget.user),
     ];
