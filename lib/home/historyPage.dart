@@ -12,15 +12,8 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  int _currentIndex = 1;
   List<Map<String, dynamic>> _history = [];
   bool isLoading = true;
-
-  final List<BottomNavigationBarItem> _navItems = const [
-    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-    BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
-    BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-  ];
 
   @override
   void initState() {
@@ -83,12 +76,6 @@ class _HistoryPageState extends State<HistoryPage> {
     } catch (e) {
       return 'Invalid date';
     }
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
   }
 
   @override
@@ -214,12 +201,6 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: _navItems,
-        currentIndex: _currentIndex,
-        selectedItemColor: const Color(0xFF6C63FF),
-        onTap: _onItemTapped,
       ),
     );
   }
