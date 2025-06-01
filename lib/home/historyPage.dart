@@ -1,207 +1,291 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:sendit/auth/urlPort.dart';
-import 'package:sendit/MapPage.dart';
+import 'package:sendit/models/user.dart';
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
-
+  final User user;
+  const HistoryPage({super.key, required this.user});
   @override
   _HistoryPageState createState() => _HistoryPageState();
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  List<Map<String, dynamic>> _history = [];
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchHistory();
-  }
-
-  Future<void> fetchHistory() async {
+  Future<List<dynamic>> fetchOrdersByUserId() async {
     try {
-      final response = await http.get(
-        Uri.parse('${urlPort}api/pemesanan'),
-      );
+      final response = await http.get(Uri.parse(
+          'http://192.168.1.11:8000/api/pemesanan/pemesanan/${widget.user.id_user}'));
+      print('Response status: ${response.statusCode}');
+      print('Response body raw: ${response.body}');
+      print("id usernya adalah ${widget.user.id_user}");
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        setState(() {
-          _history = data.map((item) {
-            return {
-              'location': item['lokasi_tujuan'] ?? 'Lokasi tidak tersedia',
-              'status': item['status'] ?? 'Status tidak tersedia',
-              'date': _formatDate(item['created_at'] ?? ''),
-              'price': 'Rp ${item['total_harga'] ?? '0'}',
-              'latitude': item['latitude'] ?? 0.0,
-              'longitude': item['longitude'] ?? 0.0,
-            };
-          }).toList();
-          isLoading = false;
-        });
-      } else {
-        throw Exception('Failed to load history');
+        final List<dynamic> responseBody = jsonDecode(response.body);
+        print('Response body decoded: $responseBody');
+        print('Returning response body');
+        return responseBody;
       }
+      print('Non-200 status code, returning empty list');
+      return [];
     } catch (e) {
-      print('Error fetching history: $e');
-      setState(() {
-        isLoading = false;
-      });
-
-      if (mounted) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Error'),
-            content: Text('Failed to load history: $e'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    }
-  }
-
-  String _formatDate(String dateString) {
-    try {
-      final DateTime date = DateTime.parse(dateString);
-      return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
-    } catch (e) {
-      return 'Invalid date';
+      print('Detailed error: $e');
+      return [];
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF6C63FF),
         elevation: 0,
-        title: SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset(
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              // decoration: BoxDecoration(
+              //   color: Colors.white,
+              //   borderRadius: BorderRadius.circular(12),
+              // ),
+              child: Image.asset(
                 'assets/sendit.png',
                 height: 24,
-                color: Colors.white,
-              ),
-              const SizedBox(width: 8),
-              const Text(
-                'Sendit!',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            const Text(
-              'Riwayat Pengiriman',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
               ),
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _history.isEmpty
-                      ? const Center(child: Text('Tidak ada riwayat pengiriman'))
-                      : RefreshIndicator(
-                          onRefresh: fetchHistory,
-                          child: ListView.separated(
-                            itemCount: _history.length,
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(height: 12),
-                            itemBuilder: (context, index) {
-                              final item = _history[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MapPage(
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF6C63FF),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        item['location']!,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        item['status']!,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        item['date']!,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            item['price']!,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+            const SizedBox(width: 12),
+            Text(
+              'Riwayat ${widget.user.nama}',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
             ),
           ],
         ),
       ),
+      body: FutureBuilder<List<dynamic>>(
+        future: fetchOrdersByUserId(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+                child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6C63FF)),
+            ));
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 60, color: Colors.red[300]),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Oops! Terjadi kesalahan',
+                    style: TextStyle(
+                      color: Colors.grey[800],
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Coba refresh halaman',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.history, size: 80, color: Colors.grey[300]),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Belum ada riwayat pesanan',
+                    style: TextStyle(
+                      color: Colors.grey[800],
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Pesanan Anda akan muncul di sini',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final order = snapshot.data![index];
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      // Navigate to order details
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF6C63FF),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '#${order['id_pemesanan']}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  order['status'],
+                                  style: const TextStyle(
+                                    color: Color(0xFF6C63FF),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              _buildLocationInfo(
+                                'Lokasi Jemput',
+                                order['lokasi_jemput'],
+                                Icons.location_on,
+                                Colors.blue,
+                              ),
+                              const SizedBox(height: 16),
+                              _buildLocationInfo(
+                                'Lokasi Tujuan',
+                                order['lokasi_tujuan'],
+                                Icons.location_on_outlined,
+                                Colors.red,
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.local_shipping,
+                                        size: 20,
+                                        color: Colors.grey[600],
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        '${order['jarak']} km',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    'Rp ${order['total_harga']}',
+                                    style: const TextStyle(
+                                      color: Color(0xFF6C63FF),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildLocationInfo(
+      String title, String address, IconData icon, Color color) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: 20,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12,
+                ),
+              ),
+              Text(
+                address,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

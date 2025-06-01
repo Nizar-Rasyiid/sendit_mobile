@@ -1,6 +1,4 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_timezone/flutter_timezone.dart' as tz;
-import 'package:timezone/data/latest_all.dart' as tz;
 
 class LocalNotifications {
   static final FlutterLocalNotificationsPlugin
@@ -11,7 +9,7 @@ class LocalNotifications {
         AndroidInitializationSettings('@mipmap/ic_launcher');
     final DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
-      onDidReceiveLocalNotification: (id, title, body, payload) => null,
+      onDidReceiveLocalNotification: (id, title, body, payload) {},
     );
     final LinuxInitializationSettings initializationSettingsLinux =
         LinuxInitializationSettings(defaultActionName: 'Open notification');
@@ -22,7 +20,7 @@ class LocalNotifications {
             linux: initializationSettingsLinux);
     _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: (details) => null,
+      onDidReceiveNotificationResponse: (details) {},
     );
   }
 

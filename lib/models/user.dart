@@ -1,11 +1,12 @@
 class User {
-  final int id_user;
-  final String nama;
-  final String alamat;
-  final String noHp;
-  final String email;
-  final String username; // Tambahkan username
-  final String role;
+  int id_user;
+  String nama;
+  String alamat;
+  String noHp;
+  String email;
+  String username; // Tambahkan username
+  String role;
+  String image;
 
   User({
     required this.id_user,
@@ -15,6 +16,7 @@ class User {
     required this.noHp,
     required this.username, // Tambahkan ini
     required this.role,
+    required this.image,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,7 @@ class User {
       noHp: json['no_hp']?.toString() ?? '',
       username: json['username']?.toString() ?? '', // Tambahkan username
       role: json['role']?.toString() ?? '',
+      image: json['image']?.toString() ?? '',
     );
   }
 }

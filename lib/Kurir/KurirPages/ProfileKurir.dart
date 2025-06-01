@@ -1,15 +1,21 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:http/http.dart' as http;
 import 'package:sendit/auth/urlPort.dart';
+=======
+import 'package:sendit/models/user.dart';
+
+>>>>>>> origin/Nizar
 class ProfileKurir extends StatefulWidget {
-  const ProfileKurir({super.key});
+  final User user;
+  const ProfileKurir({super.key, required this.user});
 
   @override
   _ProfileKurirState createState() => _ProfileKurirState();
 }
 
 class _ProfileKurirState extends State<ProfileKurir> {
+<<<<<<< HEAD
   Map<String, dynamic>? userData;
   bool isLoading = true;
 
@@ -102,6 +108,8 @@ Future<void> fetchUserData() async {
     }
   }
 
+=======
+>>>>>>> origin/Nizar
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,6 +143,7 @@ Future<void> fetchUserData() async {
           ),
         ],
       ),
+<<<<<<< HEAD
       body: RefreshIndicator(
         onRefresh: fetchUserData,
         child: isLoading
@@ -183,6 +192,16 @@ Future<void> fetchUserData() async {
                       ],
                     ),
                   ),
+=======
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildProfileHeader(),
+            const SizedBox(height: 20),
+            _buildInfoSection(),
+          ],
+        ),
+>>>>>>> origin/Nizar
       ),
     );
   }
@@ -211,7 +230,7 @@ Future<void> fetchUserData() async {
           _buildProfileImage(),
           const SizedBox(height: 16),
           Text(
-            userData?['nama'] ?? 'N/A',
+            widget.user.nama ?? 'N/A',
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -219,7 +238,7 @@ Future<void> fetchUserData() async {
             ),
           ),
           Text(
-            userData?['role']?.toUpperCase() ?? 'KURIR',
+            widget.user.role.toUpperCase() ?? 'KURIR',
             style: TextStyle(
               fontSize: 14,
               color: Colors.white.withOpacity(0.8),
@@ -290,10 +309,10 @@ Future<void> fetchUserData() async {
             'Personal Information',
             Icons.person_outline,
             [
-              _buildInfoRow('Name', userData?['nama'] ?? 'N/A'),
-              _buildInfoRow('Phone', userData?['no_hp'] ?? 'N/A'),
-              _buildInfoRow('Email', userData?['email'] ?? 'N/A'),
-              _buildInfoRow('Address', userData?['alamat'] ?? 'N/A'),
+              _buildInfoRow('Name', widget.user.nama ?? 'N/A'),
+              _buildInfoRow('Phone', widget.user.noHp ?? 'N/A'),
+              _buildInfoRow('Email', widget.user.email ?? 'N/A'),
+              _buildInfoRow('Address', widget.user.alamat ?? 'N/A'),
             ],
           ),
           const SizedBox(height: 16),
@@ -301,10 +320,10 @@ Future<void> fetchUserData() async {
             'Account Information',
             Icons.security,
             [
-              _buildInfoRow('Username', userData?['username'] ?? 'N/A'),
-              _buildInfoRow('Role', (userData?['role'] ?? 'N/A').toUpperCase()),
-              _buildInfoRow(
-                  'Member Since', _formatDate(userData?['created_at'] ?? '')),
+              _buildInfoRow('Username', widget.user.username ?? 'N/A'),
+              _buildInfoRow('Role', (widget.user.role ?? 'N/A').toUpperCase()),
+              // _buildInfoRow(
+              //     'Member Since', _formatDate(widget.user.created_at ?? '')),
             ],
           ),
         ],

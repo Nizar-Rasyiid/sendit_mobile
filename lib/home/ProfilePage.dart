@@ -1,12 +1,14 @@
 import 'dart:convert';
-import 'dart:io'; // Add this import for File
+
 import 'package:flutter/material.dart';
+import 'package:sendit/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
 import 'package:image_picker/image_picker.dart';
-import 'package:sendit/auth/urlPort.dart';
+
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final User user;
+
+  const ProfilePage({super.key, required this.user});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -92,127 +94,7 @@ class ImageFromGalleryExState extends State<ImageFromGalleryEx> {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  Map<String, dynamic>? userData;
-  bool isLoading = true;
-
-  Future<void> _editUserData() async {
-    if (userData == null) return;
-
-    final editedData = await showDialog<Map<String, dynamic>>(
-      context: context,
-      builder: (context) {
-        final nameController = TextEditingController(text: userData?['nama']);
-        final phoneController = TextEditingController(text: userData?['no_hp']);
-        final emailController = TextEditingController(text: userData?['email']);
-        final addressController =
-            TextEditingController(text: userData?['alamat']);
-
-        return AlertDialog(
-          title: const Text('Edit User Data'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: phoneController,
-                  decoration: const InputDecoration(labelText: 'Phone'),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: addressController,
-                  decoration: const InputDecoration(labelText: 'Address'),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop({
-                  'nama': nameController.text,
-                  'no_hp': phoneController.text,
-                  'email': emailController.text,
-                  'alamat': addressController.text,
-                });
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (editedData != null) {
-      setState(() {
-        userData = {
-          ...userData!,
-          ...editedData,
-        };
-      });
-
-      final url = Uri.parse('${urlPort}api/user/1');
-      try {
-        final response = await http.put(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(userData),
-        );
-
-        if (response.statusCode == 200) {
-          print('User data updated successfully');
-        } else {
-          throw Exception('Failed to update user data: ${response.statusCode}');
-        }
-      } catch (e) {
-        print('Error updating user data: $e');
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchUserData();
-  }
-
-  Future<void> fetchUserData() async {
-    final url = Uri.parse('${urlPort}api/user/1');
-    try {
-      print('Fetching from URL: $url');
-      final response = await http.get(url);
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        setState(() {
-          userData = json.decode(response.body);
-          isLoading = false;
-        });
-      } else {
-        throw Exception('Failed to load user data: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error detail: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -222,70 +104,106 @@ class _ProfilePageState extends State<ProfilePage> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF6C63FF),
         elevation: 0,
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/sendit.png',
-              height: 24,
-              color: Colors.white,
-            ),
-            const SizedBox(width: 8),
-          ],
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit, color: Colors.white),
-            onPressed: () async {
-              await _editUserData();
-            },
+            onPressed: () => _showEditProfileDialog(),
           ),
         ],
       ),
-      body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6C63FF)),
-              ),
-            )
-          : userData == null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.error_outline,
-                        size: 60,
-                        color: Colors.red,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Failed to load user data',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey[800],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      ElevatedButton(
-                        onPressed: fetchUserData,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF6C63FF),
-                        ),
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                )
-              : SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildProfileHeader(),
-                      const SizedBox(height: 20),
-                      _buildInfoSection(),
-                    ],
-                  ),
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildProfileHeader(),
+            const SizedBox(height: 20),
+            _buildInfoSection(),
+          ],
+        ),
+      ),
     );
+  }
+
+  void _showEditProfileDialog() {
+    final nameController = TextEditingController(text: widget.user.nama);
+    final phoneController = TextEditingController(text: widget.user.noHp);
+    final addressController = TextEditingController(text: widget.user.alamat);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Profile'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                ),
+                TextField(
+                  controller: phoneController,
+                  decoration: const InputDecoration(labelText: 'Phone'),
+                ),
+                TextField(
+                  controller: addressController,
+                  decoration: const InputDecoration(labelText: 'Address'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _updateProfile(
+                  nameController.text,
+                  phoneController.text,
+                  addressController.text,
+                );
+                Navigator.of(context).pop();
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateProfile(String name, String phone, String address) async {
+    setState(() {
+      widget.user.nama = name;
+      widget.user.noHp = phone;
+      widget.user.alamat = address;
+    });
+
+    final response = await http.put(
+      Uri.parse(
+          'http://192.168.1.11:8000/api/userUpdate/${widget.user.id_user}'),
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      body: jsonEncode({
+        'nama': name,
+        'noHp': phone,
+        'alamat': address,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Profile updated successfully');
+    } else {
+      print('Failed to update profile');
+    }
   }
 
   Widget _buildProfileHeader() {
@@ -312,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
           _buildProfileImage(),
           const SizedBox(height: 16),
           Text(
-            userData?['nama'] ?? 'N/A',
+            widget.user.nama,
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -320,7 +238,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           Text(
-            userData?['role']?.toUpperCase() ?? 'USER',
+            widget.user.role,
             style: TextStyle(
               fontSize: 14,
               color: Colors.white.withOpacity(0.8),
@@ -353,81 +271,72 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           //profile picture
           child: ClipOval(
-            child: Image.asset(
-              'assets/darwin.png',
+            child: Image.network(
+              widget.user.image,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => const Icon(
+                Icons.person,
+                size: 100,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          width: 45,
-          height: 45,
-          //camera button
-          child: IconButton(
-            icon: const Icon(
+        GestureDetector(
+          onTap: _pickImage,
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(
               Icons.camera_alt,
               color: Color(0xFF6C63FF),
               size: 24,
             ),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Choose an option'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListTile(
-                          leading: const Icon(Icons.photo_library),
-                          title: const Text('Gallery'),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ImageFromGalleryEx(ImageSource.gallery),
-                              ),
-                            );
-                          },
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.photo_camera),
-                          title: const Text('Camera'),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ImageFromGalleryEx(ImageSource.camera),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
           ),
         ),
       ],
     );
+  }
+
+  Future<void> _pickImage() async {
+    try {
+      final pickedFile =
+          await _imagePicker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        final request = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'http://192.168.1.11:8000/api/user/${widget.user.id_user}/upload-image'),
+        );
+        request.files
+            .add(await http.MultipartFile.fromPath('image', pickedFile.path));
+        final response = await request.send();
+
+        if (response.statusCode == 200) {
+          final responseData = await response.stream.bytesToString();
+          final jsonResponse = jsonDecode(responseData);
+          setState(() {
+            widget.user.image = jsonResponse['image_url'];
+          });
+          print('Image uploaded successfully');
+        } else {
+          print('Failed to upload image');
+        }
+      }
+    } catch (e) {
+      print('Error picking or uploading image: $e');
+    }
   }
 
   Widget _buildInfoSection() {
@@ -439,10 +348,10 @@ class _ProfilePageState extends State<ProfilePage> {
             'Personal Information',
             Icons.person_outline,
             [
-              _buildInfoRow('Name', userData?['nama'] ?? 'N/A'),
-              _buildInfoRow('Phone', userData?['no_hp'] ?? 'N/A'),
-              _buildInfoRow('Email', userData?['email'] ?? 'N/A'),
-              _buildInfoRow('Address', userData?['alamat'] ?? 'N/A'),
+              _buildInfoRow('Name', widget.user.nama),
+              _buildInfoRow('Phone', widget.user.noHp),
+              _buildInfoRow('Email', widget.user.email),
+              _buildInfoRow('Address', widget.user.alamat),
             ],
           ),
           const SizedBox(height: 16),
@@ -450,10 +359,8 @@ class _ProfilePageState extends State<ProfilePage> {
             'Account Information',
             Icons.security,
             [
-              _buildInfoRow('Username', userData?['username'] ?? 'N/A'),
-              _buildInfoRow('Role', (userData?['role'] ?? 'N/A').toUpperCase()),
-              _buildInfoRow(
-                  'Member Since', _formatDate(userData?['created_at'] ?? '')),
+              _buildInfoRow('Username', widget.user.username),
+              _buildInfoRow('Role', widget.user.role.toUpperCase()),
             ],
           ),
         ],
@@ -543,15 +450,5 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
-  }
-
-  String _formatDate(String dateStr) {
-    if (dateStr.isEmpty) return 'N/A';
-    try {
-      final date = DateTime.parse(dateStr);
-      return '${date.day}/${date.month}/${date.year}';
-    } catch (e) {
-      return 'N/A';
-    }
   }
 }

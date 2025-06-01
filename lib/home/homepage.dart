@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sendit/home/historyPage.dart';
 import 'package:sendit/local_notifications.dart';
+import 'package:sendit/models/user.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final User user;
+
+  const HomePage({super.key, required this.user});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -11,6 +13,40 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _isPeriodicNotificationEnabled = false;
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: const Color(0xFF6C63FF),
+      elevation: 0,
+      title: Image.asset(
+        'assets/sendit.png',
+        height: 24,
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            children: [
+              Text(
+                widget.user.nama, // Access widget.user inside the state class
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 8),
+              const CircleAvatar(
+                backgroundImage: AssetImage('assets/profile_image.png'),
+                radius: 20,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,44 +90,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
-
-AppBar _buildAppBar() {
-  return AppBar(
-    automaticallyImplyLeading: false,
-    backgroundColor: const Color(0xFF4834DF),
-    elevation: 0,
-    title: const Text(
-      'SendIt!',
-      style: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    ),
-    actions: const [
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: Row(
-          children: [
-            Text(
-              'User',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(width: 8),
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/profile_image.png'),
-              radius: 20,
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
 }
 
 Widget _buildPromoSection(BuildContext context) {
