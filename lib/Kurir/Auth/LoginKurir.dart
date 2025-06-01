@@ -5,6 +5,7 @@ import 'package:sendit/Kurir/KurirPages/MainKurirNav.dart';
 import 'dart:convert';
 // Import MainKurirNavigation
 import 'package:sendit/models/user.dart'; // Import User model
+import 'package:sendit/auth/urlPort.dart';
 
 class LoginKurir extends StatefulWidget {
   const LoginKurir({super.key});
@@ -22,7 +23,7 @@ class _LoginKurirState extends State<LoginKurir> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _login() async {
-    final url = Uri.parse('http://192.168.1.11:8000/api/login');
+    final url = Uri.parse('${urlPort}api/login');
 
     try {
       print('Sending login request with email: ${_emailController.text}');

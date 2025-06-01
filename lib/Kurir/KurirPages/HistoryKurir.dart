@@ -1,16 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:sendit/Kurir/KurirPages/HomeKurir.dart';
 import 'BottomNavigation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:sendit/auth/urlPort.dart';
 import 'package:sendit/MapPage.dart';
-=======
 import 'package:sendit/models/user.dart';
-import 'package:http/http.dart' as http;
->>>>>>> origin/Nizar
 
 class HistoryKurir extends StatefulWidget {
   final User user;
@@ -23,12 +19,9 @@ class HistoryKurir extends StatefulWidget {
 
 class _HistoryKurirState extends State<HistoryKurir> {
   int _currentIndex = 1;
-<<<<<<< HEAD
   List<Map<String, dynamic>> _workHistory = [];
   bool isLoading = true;
-=======
   Future<List<dynamic>>? _futureWorkHistory;
->>>>>>> origin/Nizar
 
   @override
   void initState() {
@@ -39,7 +32,7 @@ class _HistoryKurirState extends State<HistoryKurir> {
   Future<List<dynamic>> fetchOrdersByKurirId() async {
     try {
       final url = Uri.parse(
-          'http://192.168.1.11:8000/api/pemesanan/pemesanankurir/${widget.user.id_user}');
+          '${urlPort}api/pemesanan/pemesanankurir/${widget.user.id_user}');
       final response = await http.get(url);
       print('Response status: ${response.statusCode}');
       print('Response body raw: ${response.body}');
@@ -166,16 +159,10 @@ class _HistoryKurirState extends State<HistoryKurir> {
                       Text(
                         widget.user.nama ?? '',
                         style: TextStyle(
-<<<<<<< HEAD
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
                         ),
-=======
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
->>>>>>> origin/Nizar
                       ),
                       SizedBox(width: 4),
                       CircleAvatar(
@@ -198,7 +185,6 @@ class _HistoryKurirState extends State<HistoryKurir> {
           ),
         ),
       ),
-<<<<<<< HEAD
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -295,129 +281,6 @@ class _HistoryKurirState extends State<HistoryKurir> {
             ),
           ],
         ),
-=======
-      body: FutureBuilder<List<dynamic>>(
-        future: _futureWorkHistory,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-                child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6C63FF)),
-            ));
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 60, color: Colors.red[300]),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Oops! Terjadi kesalahan',
-                    style: TextStyle(
-                      color: Colors.grey[800],
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Coba refresh halaman',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.history, size: 80, color: Colors.grey[300]),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Belum ada riwayat pengiriman',
-                    style: TextStyle(
-                      color: Colors.grey[800],
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Riwayat pengiriman Anda akan muncul di sini',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return ListView.separated(
-              padding: const EdgeInsets.all(10),
-              itemCount: snapshot.data!.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final item = snapshot.data![index];
-                return Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF6C63FF),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item['location'] ?? '',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        item['status'] ?? '',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        item['date'] ?? '',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            item['price'] ?? '',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          }
-        },
->>>>>>> origin/Nizar
       ),
       // bottomNavigationBar: BottomNavigationBar(
       //   // items: _navItems,

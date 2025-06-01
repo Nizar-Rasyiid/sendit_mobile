@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sendit/models/user.dart';
+import 'package:sendit/auth/urlPort.dart';
 
 class HistoryPage extends StatefulWidget {
   final User user;
@@ -13,7 +14,7 @@ class _HistoryPageState extends State<HistoryPage> {
   Future<List<dynamic>> fetchOrdersByUserId() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://192.168.1.11:8000/api/pemesanan/pemesanan/${widget.user.id_user}'));
+          '${urlPort}api/pemesanan/pemesanan/${widget.user.id_user}'));
       print('Response status: ${response.statusCode}');
       print('Response body raw: ${response.body}');
       print("id usernya adalah ${widget.user.id_user}");

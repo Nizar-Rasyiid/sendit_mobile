@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:sendit/Kurir/Auth/LoginKurir.dart';
+import 'package:sendit/auth/urlPort.dart';
 
 class RegisterKurir extends StatefulWidget {
   const RegisterKurir({super.key});
@@ -25,7 +26,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
       TextEditingController();
 
   Future<void> _register() async {
-    final url = Uri.parse('http://192.168.1.11:8000/api/register');
+    final url = Uri.parse('${urlPort}api/register');
 
     final response = await http.post(
       url,

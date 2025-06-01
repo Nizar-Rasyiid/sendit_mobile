@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sendit/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:sendit/auth/urlPort.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -190,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     final response = await http.put(
       Uri.parse(
-          'http://192.168.1.11:8000/api/userUpdate/${widget.user.id_user}'),
+          '${urlPort}api/userUpdate/${widget.user.id_user}'),
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
       body: jsonEncode({
         'nama': name,
@@ -317,7 +318,7 @@ class _ProfilePageState extends State<ProfilePage> {
         final request = http.MultipartRequest(
           'POST',
           Uri.parse(
-              'http://192.168.1.11:8000/api/user/${widget.user.id_user}/upload-image'),
+              '${urlPort}api/user/${widget.user.id_user}/upload-image'),
         );
         request.files
             .add(await http.MultipartFile.fromPath('image', pickedFile.path));

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'login.dart';
+import 'package:sendit/auth/urlPort.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -27,7 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       final response = await http.post(
-        Uri.parse('http://192.168.1.11:8000/api/register'),
+        Uri.parse('${urlPort}api/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'nama': _namaController.text,
