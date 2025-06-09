@@ -38,14 +38,14 @@ class _RegisterPageState extends State<RegisterPage> {
           'username': _usernameController.text,
           'password': _passwordController.text,
           'password_confirmation': _confirmPasswordController.text,
-          'role': 'pengirim',
+          'role': 'pemesan',
         }),
       );
 
       if (response.statusCode == 201) {
         // Registration successful
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('User registered successfully!')),
+          const SnackBar(content: Text('User registered successfully!')),
         );
         Navigator.pushReplacement(
           context,
@@ -85,6 +85,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
+                const Text(
+                  'Daftar Sebagai Pengirim',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
                 TextFormField(
                   controller: _namaController,
                   decoration: InputDecoration(
@@ -92,6 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    prefixIcon: const Icon(Icons.person, color: Color(0xFF6C63FF)),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -108,6 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    prefixIcon: const Icon(Icons.home, color: Color(0xFF6C63FF)),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -124,6 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    prefixIcon: const Icon(Icons.phone, color: Color(0xFF6C63FF)),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -140,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    prefixIcon: const Icon(Icons.email),
+                    prefixIcon: const Icon(Icons.email, color: Color(0xFF6C63FF)),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
@@ -158,6 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    prefixIcon: const Icon(Icons.person_outline, color: Color(0xFF6C63FF)),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -174,12 +187,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    prefixIcon: const Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock, color: Color(0xFF6C63FF)),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword
                             ? Icons.visibility
                             : Icons.visibility_off,
+                        color: const Color(0xFF6C63FF),
                       ),
                       onPressed: () {
                         setState(() {
@@ -204,12 +218,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    prefixIcon: const Icon(Icons.lock),
+                    prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF6C63FF)),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureConfirmPassword
                             ? Icons.visibility
                             : Icons.visibility_off,
+                        color: const Color(0xFF6C63FF),
                       ),
                       onPressed: () {
                         setState(() {
@@ -229,37 +244,54 @@ class _RegisterPageState extends State<RegisterPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                // DropdownButtonFormField<String>(
-                //   value: _role,
-                //   decoration: InputDecoration(
-                //     labelText: 'Role',
-                //     border: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10),
-                //     ),
-                //   ),
-                //   items: ['admin', 'kurir', 'pemesan'].map((String role) {
-                //     return DropdownMenuItem<String>(
-                //       value: role,
-                //       child: Text(role),
-                //     );
-                //   }).toList(),
-                //   onChanged: (String? newValue) {
-                //     setState(() {
-                //       _role = newValue!;
-                //     });
-                //   },
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Mohon pilih role';
-                //     }
-                //     return null;
-                //   },
-                // ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: _register,
-                  child: const Text('Daftar'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF6C63FF),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    elevation: 3,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.app_registration, size: 24),
+                      SizedBox(width: 10),
+                      Text(
+                        'DAFTAR',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Sudah punya akun?'),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                        );
+                      },
+                      child: const Text(
+                        'Masuk',
+                        style: TextStyle(
+                          color: Color(0xFF6C63FF),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

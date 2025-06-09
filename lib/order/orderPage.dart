@@ -10,8 +10,9 @@ import 'package:sendit/models/user.dart';
 class OrderPage extends StatefulWidget {
   final User? user; // Tambahkan parameter user
   final String? token; // Tambahkan parameter token
+  final String? selectedWeight; // Tambahkan parameter selectedWeight
 
-  const OrderPage({super.key, this.user, this.token});
+  const OrderPage({super.key, this.user, this.token, this.selectedWeight});
 
   @override
   _OrderPageState createState() => _OrderPageState();
@@ -32,6 +33,9 @@ class _OrderPageState extends State<OrderPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.selectedWeight != null) {
+      selectedWeight = widget.selectedWeight!;
+    }
     _calculatePrice();
   }
 
@@ -46,9 +50,9 @@ class _OrderPageState extends State<OrderPage> {
           'Authorization': 'Bearer ${widget.token}', // Tambahkan token
         },
         body: json.encode({
-          'id_user':
-              widget.user!.id_user, // Assuming you have user ID available
-          'id_kurir': 28,
+          'id_user': 30,
+              // widget.user!.id_user, // Assuming you have user ID available
+          'id_kurir': 35,
           'jarak': totalDistance,
           'lokasi_jemput': senderAddressController.text,
           'lokasi_tujuan': receiverAddressController.text,

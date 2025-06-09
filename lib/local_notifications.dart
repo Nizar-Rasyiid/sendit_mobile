@@ -57,4 +57,16 @@ class LocalNotifications {
     await _flutterLocalNotificationsPlugin.periodicallyShow(
         1, title, body, RepeatInterval.daily, notificationDetails);
   }
+
+  static Future schedulePeriodicNotification() async {
+    await showSimpleNotification(
+      title: 'Pengingat Pengiriman',
+      body: 'bro paketnya udh dikirim belum jangan sampai teman kamu nungguin paketnya yang belum dikirim',
+      payload: 'reminder',
+    );
+  }
+
+  static Future cancelPeriodicNotification() async {
+    await _flutterLocalNotificationsPlugin.cancel(1);
+  }
 }

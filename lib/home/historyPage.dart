@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:sendit/models/user.dart';
 import 'package:sendit/auth/urlPort.dart';
+import 'package:sendit/home/order_tracking_page.dart';
 
 class HistoryPage extends StatefulWidget {
   final User user;
@@ -142,7 +144,12 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                   child: InkWell(
                     onTap: () {
-                      // Navigate to order details
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderTrackingPage(order: order),
+                        ),
+                      );
                     },
                     child: Column(
                       children: [

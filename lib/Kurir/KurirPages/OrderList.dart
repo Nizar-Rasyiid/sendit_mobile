@@ -168,34 +168,38 @@ class OrderItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header dengan ID Pesanan dan Kategori Berat
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
+              Row(
+                children: [
+                  const PhosphorIcon(
+                    PhosphorIconsDuotone.receipt,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'ID: ${order['id'] ?? ''}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Text(
                   order['jarak'] ?? '',
                   style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              const PhosphorIcon(
-                PhosphorIconsDuotone.package,
-                color: Colors.white,
-                size: 30,
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  order['antar'] ?? 'Alamat tidak tersedia',
-                  style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -204,13 +208,128 @@ class OrderItem extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          Text(
-            'Tarif: ${order['tarif'] ?? 'Tidak tersedia'}',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+          
+          // Lokasi Jemput
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const PhosphorIcon(
+                PhosphorIconsDuotone.mapPin,
+                color: Colors.white,
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Lokasi Jemput',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      order['jemput'] ?? 'Alamat tidak tersedia',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Garis penghubung
+          Row(
+            children: [
+              const SizedBox(width: 10),
+              Container(
+                width: 2,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: Colors.white70,
+                  borderRadius: BorderRadius.circular(1),
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Lokasi Tujuan
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const PhosphorIcon(
+                PhosphorIconsDuotone.flagBanner,
+                color: Colors.white,
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Lokasi Tujuan',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      order['antar'] ?? 'Alamat tidak tersedia',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Divider
+          Container(
+            height: 1,
+            color: Colors.white.withOpacity(0.3),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Tarif
+          Row(
+            children: [
+              const PhosphorIcon(
+                PhosphorIconsDuotone.currencyCircleDollar,
+                color: Colors.white,
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Tarif: ${order['tarif'] ?? 'Tidak tersedia'}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           Row(
